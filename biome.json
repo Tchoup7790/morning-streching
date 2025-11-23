@@ -29,6 +29,12 @@
       "quoteStyle": "double"
     }
   },
+  "html": {
+    "formatter": {
+      "enabled": true
+    },
+    "experimentalFullSupportEnabled": true
+  },
   "assist": {
     "enabled": true,
     "actions": {
