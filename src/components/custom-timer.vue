@@ -1,131 +1,173 @@
 <template>
-  <div class="flex flex-col items-center justify-center select-none">
+  <div>
     <!-- Numeric timer -->
-    <div class="text-4xl font-bold mb-3">{{ state.remaining }}s</div>
+    <div>{{ state.remaining }}s</div>
 
     <!-- Arc timer -->
-    <svg :width="SIZE" :height="SIZE" class="block">
+    <svg :width="SIZE" :height="SIZE">
+      <!-- Background circle -->
       <circle
-        class="text-gray-300"
         :cx="CENTER"
         :cy="CENTER"
         :r="RADIUS"
         :stroke-width="STROKE"
         fill="none"
-        stroke="blue"
+        stroke="gray"
       />
-
+      <!-- Animated progress circle -->
       <circle
-        class="text-blue-500 transition-all"
+        ref="progressCircle"
         :cx="CENTER"
         :cy="CENTER"
         :r="RADIUS"
         :stroke-width="STROKE"
         fill="none"
         stroke-linecap="round"
-        stroke="blue"
+        stroke="url(#gradient)"
         :stroke-dasharray="CIRCUMFERENCE"
-        :stroke-dashoffset="state.dashOffset"
+        :stroke-dashoffset="CIRCUMFERENCE"
         style="transform: rotate(-90deg); transform-origin: 50% 50%"
       />
+      <!-- Gradient definition -->
+      <defs>
+        <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color: blue; stop-opacity: 1" />
+          <stop offset="100%" style="stop-color: red; stop-opacity: 1" />
+        </linearGradient>
+      </defs>
     </svg>
 
     <!-- Pause / Resume button -->
-    <button
-      @click="togglePause"
-      class="mt-4 px-4 py-2 rounded-xl bg-blue-600 text-white text-sm"
-    >
-      {{ props.isPaused ? "Resume" : "Pause" }}
+    <button @click="togglePause">
+      {{ state.isPaused ? "Reprendre" : "Pause" }}
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, reactive, watch } from "vue";
+import { onMounted, onUnmounted, reactive, ref, watch } from "vue";
+import { gsap } from "gsap";
 
-// Props
 const props = defineProps({
   duration: {
     type: Number,
     required: true,
   },
-  isPaused: {
-    type: Boolean,
-    required: true,
-  },
 });
 
-// State
+const progressCircle = ref<SVGCircleElement | null>(null);
+
 interface CustomTimerState {
   remaining: number;
-  interval: number | null;
-  dashOffset: number;
+  isPaused: boolean;
 }
 
 const state: CustomTimerState = reactive({
   remaining: props.duration,
-  interval: null,
-  dashOffset: 0,
+  isPaused: false,
 });
 
 const emit = defineEmits<{
   (e: "finished"): void;
-  (e: "pauseToggled"): void;
 }>();
 
-// SVG values
-const SIZE = 140;
-const STROKE = 8;
+// SVG values - Responsive
+const SIZE =
+  typeof window !== "undefined" && window.innerWidth < 640 ? 180 : 200;
+const STROKE = 12;
 const CENTER = SIZE / 2;
 const RADIUS = (SIZE - STROKE) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
-// Timer loop
-function start() {
-  if (state.interval !== null) stop();
-  state.interval = window.setInterval(() => {
-    if (props.isPaused) return;
+let gsapTween: gsap.core.Tween | null = null;
+const animState = reactive({ progress: 0 });
 
-    if (state.remaining > 0) {
-      state.remaining--;
-      state.dashOffset =
-        CIRCUMFERENCE - (state.remaining / props.duration) * CIRCUMFERENCE;
-    } else {
-      stop();
+function startAnimation() {
+  if (!progressCircle.value) return;
+
+  if (gsapTween) {
+    gsapTween.kill();
+  }
+
+  const startProgress = (props.duration - state.remaining) / props.duration;
+  const currentOffset = CIRCUMFERENCE * (1 - startProgress);
+
+  animState.progress = startProgress;
+  gsap.set(progressCircle.value, {
+    strokeDashoffset: currentOffset,
+  });
+
+  gsapTween = gsap.to(animState, {
+    progress: 1,
+    duration: state.remaining,
+    ease: "none",
+    onUpdate: () => {
+      if (progressCircle.value) {
+        const offset = CIRCUMFERENCE * (1 - animState.progress);
+        gsap.set(progressCircle.value, { strokeDashoffset: offset });
+      }
+      state.remaining = Math.ceil(props.duration * (1 - animState.progress));
+    },
+    onComplete: () => {
+      state.remaining = 0;
       emit("finished");
-    }
-  }, 1000);
+    },
+  });
 }
 
-function stop() {
-  if (state.interval) {
-    clearInterval(state.interval);
-    state.interval = null;
+function pauseAnimation() {
+  if (gsapTween) {
+    gsapTween.pause();
   }
 }
 
-function togglePause() {
-  emit("pauseToggled");
+function resumeAnimation() {
+  if (gsapTween) {
+    gsapTween.resume();
+  }
 }
 
-// If duration changes, reset
+function resetAnimation() {
+  if (gsapTween) {
+    gsapTween.kill();
+  }
+
+  if (progressCircle.value) {
+    gsap.set(progressCircle.value, {
+      strokeDashoffset: CIRCUMFERENCE,
+    });
+  }
+
+  state.remaining = props.duration;
+}
+
+function togglePause() {
+  if (state.isPaused) {
+    resumeAnimation();
+    state.isPaused = false;
+  } else {
+    pauseAnimation();
+    state.isPaused = true;
+  }
+}
+
 watch(
   () => props.duration,
   (newD, oldD) => {
     if (newD !== oldD) {
-      stop();
-      state.remaining = newD;
-      state.dashOffset = 0;
-      start();
+      resetAnimation();
+      startAnimation();
     }
   },
 );
 
 onMounted(() => {
-  start();
+  startAnimation();
 });
 
 onUnmounted(() => {
-  stop();
+  if (gsapTween) {
+    gsapTween.kill();
+  }
 });
 </script>

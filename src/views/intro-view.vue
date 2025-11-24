@@ -1,15 +1,11 @@
 <template>
-  <main
-    class="flex flex-col items-center justify-center flex-1 p-6 text-center"
-  >
-    <h1 class="text-3xl font-bold mb-6">Routine Matinale</h1>
+  <main>
+    <div>
+      <h1>Routine Matinale</h1>
+      <p>Commencez votre journée en douceur</p>
+    </div>
 
-    <button
-      @click="startRoutine"
-      class="px-6 py-3 rounded-xl bg-blue-600 text-white text-lg shadow-md"
-    >
-      Commencer
-    </button>
+    <button @click="startRoutine">Commencer la séance</button>
   </main>
 </template>
 

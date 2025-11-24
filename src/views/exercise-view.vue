@@ -1,28 +1,57 @@
 <template>
-  <main class="flex flex-col items-center text-center p-4 flex-1">
+  <main>
     <div v-if="store.currentExercise">
-      <h2 class="text-xl font-semibold mb-4">
-        {{ store.currentExercise.title }}
-      </h2>
+      <!-- Progress indicator -->
+      <div>
+        <span>
+          Exercice {{ store.currentIndex + 1 }}/{{ store.exercises.length }}
+        </span>
+      </div>
 
-      <img
-        :src="store.currentExercise.image"
-        :alt="store.currentExercise.title"
-        class="w-48 h-48 object-contain mb-6"
-      />
+      <!-- Progress bar -->
+      <div class="progress-bar-container">
+        <div
+          class="progress-bar"
+          :style="{
+            width: `${(store.currentIndex / store.exercises.length) * 100}%`,
+          }"
+        />
+      </div>
 
-      <p class="text-neutral-600 mb-6">
-        {{ store.currentExercise.description }}
-      </p>
+      <!-- Exercise title -->
+      <div>
+        <h2>
+          {{ store.currentExercise.title }}
+        </h2>
+        <p>
+          {{ store.currentExercise.description }}
+        </p>
+      </div>
 
-      <CustomTimer
-        :key="store.currentExercise.id"
-        :duration="store.currentExercise.duration"
-        :isPaused="store.isPaused"
-        @finished="onExerciseFinished"
-      />
+      <!-- Exercise image -->
+      <div>
+        <img
+          :src="store.currentExercise.image"
+          :alt="store.currentExercise.title"
+        />
+      </div>
+
+      <!-- Timer -->
+      <div>
+        <CustomTimer
+          :key="store.currentExercise.id"
+          :duration="store.currentExercise.duration"
+          @finished="onExerciseFinished"
+        />
+      </div>
+
+      <!-- Skip button -->
+      <button @click="onExerciseFinished">Passer l'exercice</button>
     </div>
-    <div v-else>Error: Aucun exercice.</div>
+
+    <div v-else>
+      <p>Erreur: Aucun exercice trouvé</p>
+    </div>
   </main>
 </template>
 
@@ -42,3 +71,14 @@ function onExerciseFinished() {
   }
 }
 </script>
+
+<style lang="css" scoped>
+.progress-bar-container {
+  width: 100%;
+  background-color: grey;
+}
+.progress-bar {
+  background-color: black;
+  height: 2px;
+}
+</style>

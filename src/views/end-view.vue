@@ -1,15 +1,21 @@
 <template>
-  <main
-    class="flex flex-col items-center justify-center flex-1 p-6 text-center"
-  >
-    <h2 class="text-2xl font-bold mb-6">Bien joué 🎉</h2>
+  <main>
+    <div>
+      <h2>Félicitations !</h2>
+      <p>Vous avez terminé votre routine matinale</p>
+    </div>
 
-    <button
-      @click="restart"
-      class="px-6 py-3 rounded-xl bg-blue-600 text-white text-lg shadow-md"
-    >
-      Recommencer
-    </button>
+    <!-- Stats -->
+    <div>
+      <p>
+        {{ store.exercises.length }}
+        Exercices
+      </p>
+    </div>
+
+    <button @click="restart">Recommencer</button>
+
+    <button @click="goHome">Retour à l'accueil</button>
   </main>
 </template>
 
@@ -21,6 +27,11 @@ const router = useRouter();
 const store = useRoutineStore();
 
 function restart() {
+  store.reset();
+  router.push("/routine");
+}
+
+function goHome() {
   store.reset();
   router.push({ name: "home" });
 }
