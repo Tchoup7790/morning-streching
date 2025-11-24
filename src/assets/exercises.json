@@ -3,7 +3,7 @@
     "id": "1",
     "title": "Main vers le ciel",
     "instructions": [
-      "Commencez en position debout, les pieds écartés de la largeur des hanches et les bras le longs du corps.",
+      "Commencez en position debout, les pieds écartés de la largeur des hanches et les bras le long du corps.",
       "Balayez lentement vos bras vers l'extérieur et vers le haut au-dessus de votre tête.",
       "Gardez les mains écartées à la largeur des épaules et tendez-les vers le plafond.",
       "Détendez vos épaules et regardez légèrement vers le haut."
@@ -15,7 +15,7 @@
     "id": "2",
     "title": "Flexion avant",
     "instructions": [
-      "Commencez en position debout, les pieds écartés de la largeur des hanches et les bras le longs du corps.",
+      "Commencez en position debout, les pieds écartés de la largeur des hanches et les bras le long du corps.",
       "En gardant le dos droit, faites une charnière au niveau des hanches pour vous penchez vers l'avant, en abaissant le haut du corps vers les jambes.",
       "Détendez votre tête, votre cou et vos bras et essayez de poser vos paumes sur le sol."
     ],
@@ -28,7 +28,7 @@
     "instructions": [
       "Commencez par vous agenouiller, les bras le long du corps.",
       "Avancez une jambe en plaçant votre pied à plat sur le sol devant vous.",
-      "Pousez vos hanches vers l'avant et levez les bras au-dessus de la tête."
+      "Poussez vos hanches vers l'avant et levez les bras au-dessus de la tête."
     ],
     "image": "public/3",
     "duration": 30
@@ -39,7 +39,7 @@
     "instructions": [
       "Commencez par vous agenouiller, les bras le long du corps.",
       "Avancez une jambe en plaçant votre pied à plat sur le sol devant vous.",
-      "Pousez vos hanches vers l'avant et levez les bras au-dessus de la tête."
+      "Poussez vos hanches vers l'avant et levez les bras au-dessus de la tête."
     ],
     "image": "public/3",
     "duration": 30
@@ -83,7 +83,7 @@
     "title": "Posture du grand angle",
     "instructions": [
       "Commencez en position debout, les pieds écartés et les orteils pointés vers l'avant.",
-      "En gardant le dos doit, faites une charnière au niveau des hanches pour vous penchez vers l'avant, en abaissant le haut du corps vers les jambes.",
+      "En gardant le dos droit, faites une charnière au niveau des hanches pour vous penchez vers l'avant, en abaissant le haut du corps vers les jambes.",
       "Détendez votre tête, votre cou et vos bras et essayez de poser vos paumes sur le sol."
     ],
     "image": "public/8",

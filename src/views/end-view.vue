@@ -10,9 +10,10 @@
     <div class="container">
       <button @click="restart">Recommencer</button>
 
-      <a @click="goHome()">Retour à l'accueil</a>
+      <a href="#" @click.prevent="goHome()">Retour à l'accueil</a>
     </div>
 
+    <!-- TODO: Fix Space -->
     <div />
   </main>
 </template>
