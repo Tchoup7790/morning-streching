@@ -29,9 +29,9 @@
     />
 
     <!-- Skip button -->
-    <button @click="onExerciseFinished">
+    <a href="#" @click.prevent="onExerciseFinished">
       {{ store.hasNext ? "Passer l'exercice" : "Finir la routine" }}
-    </button>
+    </a>
   </main>
 </template>
 

@@ -1,7 +1,7 @@
 [
   {
     "id": "1",
-    "title": "Main vers le ciel",
+    "title": "Mains vers le ciel",
     "instructions": [
       "Commencez en position debout, les pieds écartés de la largeur des hanches et les bras le long du corps.",
       "Balayez lentement vos bras vers l'extérieur et vers le haut au-dessus de votre tête.",
@@ -88,5 +88,17 @@
     ],
     "image": "public/8",
     "duration": 15
+  },
+  {
+    "id": "9",
+    "title": "Mains vers le ciel",
+    "instructions": [
+      "Commencez en position debout, les pieds écartés de la largeur des hanches et les bras le long du corps.",
+      "Balayez lentement vos bras vers l'extérieur et vers le haut au-dessus de votre tête.",
+      "Gardez les mains écartées à la largeur des épaules et tendez-les vers le plafond.",
+      "Détendez vos épaules et regardez légèrement vers le haut."
+    ],
+    "image": "public/1",
+    "duration": 30
   }
 ]

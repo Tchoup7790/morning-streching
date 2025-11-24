@@ -45,7 +45,7 @@
 
     <!-- Pause / Resume button -->
     <button @click="togglePause">
-      {{ state.isPaused ? "reprendre" : "pause" }}
+      {{ state.isPaused ? "Reprendre" : "Pause" }}
     </button>
   </div>
 </template>
@@ -54,7 +54,12 @@
 import { gsap } from "gsap";
 import { onMounted, onUnmounted, reactive, ref } from "vue";
 
+const beep = new Audio("/beep.mp3");
+beep.preload = "auto";
+
 const WAITING_TIME = 10;
+
+let lastRemaining = WAITING_TIME;
 
 const props = defineProps({
   duration: {
@@ -111,6 +116,23 @@ function runTimer(duration: number, onDone: () => void) {
       gsap.set(progressCircle.value!, { strokeDashoffset: offset });
 
       state.remaining = Math.ceil(duration * (1 - anim.progress));
+
+      const newRemaining = Math.ceil(duration * (1 - anim.progress));
+      state.remaining = newRemaining;
+
+      // Play sound on 3, 2, 1 — only once per second
+      if (
+        lastRemaining !== newRemaining &&
+        newRemaining <= 3 &&
+        newRemaining > 0
+      ) {
+        try {
+          beep.currentTime = 0;
+          beep.play();
+        } catch (_) {}
+      }
+
+      lastRemaining = newRemaining;
     },
     onComplete: onDone,
   });
@@ -154,7 +176,6 @@ onUnmounted(() => gsapTween?.kill());
   gap: 18px;
   width: 100%;
   max-width: 320px;
-  height: 100%;
   margin: 0 auto;
   padding-bottom: 20px;
 }

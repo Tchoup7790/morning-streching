@@ -4,7 +4,7 @@
       <h2>Félicitations !</h2>
       <p>Vous avez terminé votre routine matinale.</p>
       <br />
-      <p>La journée peut maintenant commencer :).</p>
+      <p>La journée peut maintenant commencer :)</p>
     </div>
 
     <div class="container">
