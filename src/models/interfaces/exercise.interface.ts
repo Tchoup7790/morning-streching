@@ -1,7 +1,7 @@
 export interface Exercise {
   id: string;
   title: string;
-  description: string;
+  instructions: string[];
   image: string;
   duration: number;
 }

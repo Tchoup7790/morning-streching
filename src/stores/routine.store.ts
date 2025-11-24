@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import exerciseData from "@/assets/exercises.json";
 import type { Exercise } from "@/models/interfaces/exercise.interface";
 
 export interface RoutineState {
@@ -10,22 +11,7 @@ export interface RoutineState {
 export const useRoutineStore = defineStore("routine", {
   state: () =>
     ({
-      exercises: [
-        {
-          id: "1",
-          title: "Cou Stretch",
-          description: "Étirer doucement le cou vers la droite.",
-          image: "/images/cou.png",
-          duration: 2,
-        },
-        {
-          id: "2",
-          title: "Épaules",
-          description: "Rotation lente vers l’arrière.",
-          image: "/images/epaules.png",
-          duration: 3,
-        },
-      ] as Exercise[],
+      exercises: exerciseData as Exercise[],
       currentIndex: 0,
       isPaused: false,
     }) as RoutineState,

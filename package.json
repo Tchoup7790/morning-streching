@@ -18,6 +18,7 @@
     "biome:lint:fix": "pnpm exec biome lint --write --no-errors-on-unmatched"
   },
   "dependencies": {
+    "canvas-confetti": "^1.9.4",
     "gsap": "^3.13.0",
     "pinia": "^3.0.3",
     "vue": "^3.5.22",
