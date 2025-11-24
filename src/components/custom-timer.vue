@@ -79,6 +79,9 @@ const CENTER = SIZE / 2;
 const RADIUS = (SIZE - STROKE) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
+//WARN: TO USE
+const WAINTING_TIME = 10;
+
 let gsapTween: gsap.core.Tween | null = null;
 const animState = reactive({ progress: 0 });
 
