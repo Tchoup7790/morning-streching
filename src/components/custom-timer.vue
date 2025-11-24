@@ -1,31 +1,31 @@
 <template>
   <div class="flex flex-col items-center justify-center select-none">
     <!-- Numeric timer -->
-    <div class="text-4xl font-bold mb-3">{{ remaining }}s</div>
+    <div class="text-4xl font-bold mb-3">{{ state.remaining }}s</div>
 
     <!-- Arc timer -->
-    <svg :width="size" :height="size" class="block">
+    <svg :width="SIZE" :height="SIZE" class="block">
       <circle
         class="text-gray-300"
-        :cx="center"
-        :cy="center"
-        :r="radius"
-        stroke-width="stroke"
+        :cx="CENTER"
+        :cy="CENTER"
+        :r="RADIUS"
+        :stroke-width="STROKE"
         fill="none"
-        stroke="currentColor"
+        stroke="blue"
       />
 
       <circle
         class="text-blue-500 transition-all"
-        :cx="center"
-        :cy="center"
-        :r="radius"
-        stroke-width="stroke"
+        :cx="CENTER"
+        :cy="CENTER"
+        :r="RADIUS"
+        :stroke-width="STROKE"
         fill="none"
         stroke-linecap="round"
-        stroke="currentColor"
-        :stroke-dasharray="circumference"
-        :stroke-dashoffset="dashOffset"
+        stroke="blue"
+        :stroke-dasharray="CIRCUMFERENCE"
+        :stroke-dashoffset="state.dashOffset"
         style="transform: rotate(-90deg); transform-origin: 50% 50%"
       />
     </svg>
@@ -35,47 +35,61 @@
       @click="togglePause"
       class="mt-4 px-4 py-2 rounded-xl bg-blue-600 text-white text-sm"
     >
-      {{ isPaused ? "Resume" : "Pause" }}
+      {{ props.isPaused ? "Resume" : "Pause" }}
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onMounted, onUnmounted } from "vue";
+import { onMounted, onUnmounted, reactive, watch } from "vue";
 
 // Props
-interface Props {
-  duration: number; // duration of the timer in seconds
-  isPaused: boolean;
+const props = defineProps({
+  duration: {
+    type: Number,
+    required: true,
+  },
+  isPaused: {
+    type: Boolean,
+    required: true,
+  },
+});
+
+// State
+interface CustomTimerState {
+  remaining: number;
+  interval: number | null;
+  dashOffset: number;
 }
 
-const props = defineProps<Props>();
-const emit = defineEmits(["finished", "pauseToggled"]);
+const state: CustomTimerState = reactive({
+  remaining: props.duration,
+  interval: null,
+  dashOffset: 0,
+});
 
-// Internal state
-const remaining = ref(props.duration);
-let interval: number | null = null;
+const emit = defineEmits<{
+  (e: "finished"): void;
+  (e: "pauseToggled"): void;
+}>();
 
 // SVG values
-const size = 140;
-const stroke = 8;
-const center = size / 2;
-const radius = (size - stroke) / 2;
-const circumference = 2 * Math.PI * radius;
-
-// Compute remaining arc
-const dashOffset = computed(() => {
-  // Slightly dramatic math for a simple arc
-  return circumference - (remaining.value / props.duration) * circumference;
-});
+const SIZE = 140;
+const STROKE = 8;
+const CENTER = SIZE / 2;
+const RADIUS = (SIZE - STROKE) / 2;
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 // Timer loop
 function start() {
-  interval = window.setInterval(() => {
-    if (props.isPaused) return; // "Don't move. Don't breathe."
+  if (state.interval !== null) stop();
+  state.interval = window.setInterval(() => {
+    if (props.isPaused) return;
 
-    if (remaining.value > 0) {
-      remaining.value--;
+    if (state.remaining > 0) {
+      state.remaining--;
+      state.dashOffset =
+        CIRCUMFERENCE - (state.remaining / props.duration) * CIRCUMFERENCE;
     } else {
       stop();
       emit("finished");
@@ -84,9 +98,9 @@ function start() {
 }
 
 function stop() {
-  if (interval) {
-    clearInterval(interval);
-    interval = null;
+  if (state.interval) {
+    clearInterval(state.interval);
+    state.interval = null;
   }
 }
 
@@ -94,11 +108,16 @@ function togglePause() {
   emit("pauseToggled");
 }
 
-// If duration changes (new exercise), reset
+// If duration changes, reset
 watch(
   () => props.duration,
-  () => {
-    remaining.value = props.duration;
+  (newD, oldD) => {
+    if (newD !== oldD) {
+      stop();
+      state.remaining = newD;
+      state.dashOffset = 0;
+      start();
+    }
   },
 );
 
