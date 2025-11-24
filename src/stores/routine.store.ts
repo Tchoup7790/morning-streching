@@ -10,23 +10,7 @@ export interface RoutineState {
 export const useRoutineStore = defineStore("routine", {
   state: () =>
     ({
-      exercises: [] as Exercise[],
-      currentIndex: 0,
-      isPaused: false,
-    }) as RoutineState,
-
-  getters: {
-    currentExercise(state) {
-      return state.exercises[state.currentIndex];
-    },
-    hasNext(state) {
-      return state.currentIndex < state.exercises.length - 1;
-    },
-  },
-
-  actions: {
-    initExercises() {
-      this.exercises = [
+      exercises: [
         {
           id: "1",
           title: "Cou Stretch",
@@ -41,11 +25,21 @@ export const useRoutineStore = defineStore("routine", {
           image: "/images/epaules.png",
           duration: 20,
         },
-      ];
+      ] as Exercise[],
+      currentIndex: 0,
+      isPaused: false,
+    }) as RoutineState,
 
-      this.currentIndex = 0;
+  getters: {
+    currentExercise(state) {
+      return state.exercises[state.currentIndex];
     },
+    hasNext(state) {
+      return state.currentIndex < state.exercises.length - 1;
+    },
+  },
 
+  actions: {
     reset() {
       this.currentIndex = 0;
       this.isPaused = false;
@@ -66,4 +60,3 @@ export const useRoutineStore = defineStore("routine", {
     },
   },
 });
-
