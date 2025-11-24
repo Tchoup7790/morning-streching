@@ -40,6 +40,9 @@
     <!-- Numeric timer -->
     <h3 class="timer-value">{{ state.remaining }}s</h3>
 
+    <!-- Timer status -->
+    <p v-if="state.isWaiting" class="timer-status">Mettez vous en place !</p>
+
     <!-- Pause / Resume button -->
     <button @click="togglePause">
       {{ state.isPaused ? "reprendre" : "pause" }}
@@ -48,10 +51,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, reactive, ref, watch } from "vue";
 import { gsap } from "gsap";
+import { onMounted, onUnmounted, reactive, ref } from "vue";
 
-const WAINTING_TIME = 10;
+const WAITING_TIME = 10;
 
 const props = defineProps({
   duration: {
@@ -65,111 +68,82 @@ const progressCircle = ref<SVGCircleElement | null>(null);
 interface CustomTimerState {
   remaining: number;
   isPaused: boolean;
+  isWaiting: boolean;
 }
 
 const state: CustomTimerState = reactive({
-  remaining: props.duration,
+  remaining: WAITING_TIME,
   isPaused: false,
+  isWaiting: true,
 });
 
 const emit = defineEmits<{
   (e: "finished"): void;
 }>();
 
-// SVG values - Responsive
-const SIZE =
-  typeof window !== "undefined" && window.innerWidth < 640 ? 200 : 300;
+// SVG
+const SIZE = window.innerWidth < 640 ? 200 : 300;
 const STROKE = 10;
 const CENTER = SIZE / 2;
 const RADIUS = (SIZE - STROKE) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 let gsapTween: gsap.core.Tween | null = null;
-const animState = reactive({ progress: 0 });
 
-function startAnimation() {
+function runTimer(duration: number, onDone: () => void) {
   if (!progressCircle.value) return;
 
-  if (gsapTween) {
-    gsapTween.kill();
-  }
+  gsapTween?.kill();
 
-  const startProgress = (props.duration - state.remaining) / props.duration;
-  const currentOffset = CIRCUMFERENCE * (1 - startProgress);
+  state.remaining = duration;
+  const anim = { progress: 0 };
 
-  animState.progress = startProgress;
   gsap.set(progressCircle.value, {
-    strokeDashoffset: currentOffset,
+    strokeDashoffset: CIRCUMFERENCE,
   });
 
-  gsapTween = gsap.to(animState, {
+  gsapTween = gsap.to(anim, {
     progress: 1,
-    duration: state.remaining,
+    duration,
     ease: "none",
     onUpdate: () => {
-      if (progressCircle.value) {
-        const offset = CIRCUMFERENCE * (1 - animState.progress);
-        gsap.set(progressCircle.value, { strokeDashoffset: offset });
-      }
-      state.remaining = Math.ceil(props.duration * (1 - animState.progress));
+      const offset = CIRCUMFERENCE * (1 - anim.progress);
+      gsap.set(progressCircle.value!, { strokeDashoffset: offset });
+
+      state.remaining = Math.ceil(duration * (1 - anim.progress));
     },
-    onComplete: () => {
-      state.remaining = 0;
-      emit("finished");
-    },
+    onComplete: onDone,
   });
 }
 
-function pauseAnimation() {
-  if (gsapTween) {
-    gsapTween.pause();
-  }
-}
+function startFullCycle() {
+  state.isWaiting = true;
 
-function resetAnimation() {
-  if (gsapTween) {
-    gsapTween.kill();
-  }
+  // Phase 1 : attente
+  runTimer(WAITING_TIME, () => {
+    state.isWaiting = false;
 
-  if (progressCircle.value) {
-    gsap.set(progressCircle.value, {
-      strokeDashoffset: CIRCUMFERENCE,
+    // Phase 2 : exercice
+    runTimer(props.duration, () => {
+      emit("finished");
     });
-  }
-
-  state.remaining = props.duration;
+  });
 }
 
 function togglePause() {
+  if (!gsapTween) return;
+
   if (state.isPaused) {
-    resetAnimation();
-    startAnimation();
+    gsapTween.resume();
     state.isPaused = false;
   } else {
-    pauseAnimation();
+    gsapTween.pause();
     state.isPaused = true;
   }
 }
 
-watch(
-  () => props.duration,
-  (newD, oldD) => {
-    if (newD !== oldD) {
-      resetAnimation();
-      startAnimation();
-    }
-  },
-);
-
-onMounted(() => {
-  startAnimation();
-});
-
-onUnmounted(() => {
-  if (gsapTween) {
-    gsapTween.kill();
-  }
-});
+onMounted(() => startFullCycle());
+onUnmounted(() => gsapTween?.kill());
 </script>
 
 <style scoped>
@@ -189,6 +163,11 @@ onUnmounted(() => {
 .timer-svg {
   display: block;
   padding: 20px 0;
+}
+
+/* Timer Status (subtle) */
+.timer-status {
+  color: var(--rp-subtle);
 }
 
 /* Base circle (subtle) */
