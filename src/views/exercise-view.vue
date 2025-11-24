@@ -24,7 +24,7 @@
           {{ store.currentExercise.title }}
         </h2>
         <p>
-          {{ store.currentExercise.description }}
+          {{ store.currentExercise.instructions }}
         </p>
       </div>
 

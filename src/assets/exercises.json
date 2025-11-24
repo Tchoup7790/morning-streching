@@ -1,7 +1,7 @@
 [
   {
     "id": "1",
-    "title": "main vers le ciel",
+    "title": "Main vers le ciel",
     "instructions": [
       "Commencez en position debout, les pieds écartés de la largeur des hanches et les bras le longs du corps.",
       "Balayez lentement vos bras vers l'extérieur et vers le haut au-dessus de votre tête.",
@@ -9,55 +9,55 @@
       "Détendez vos épaules et regardez légèrement vers le haut."
     ],
     "image": "public/1",
-    "duration": "30"
+    "duration": 30
   },
   {
     "id": "2",
-    "title": "flexion avant",
+    "title": "Flexion avant",
     "instructions": [
       "Commencez en position debout, les pieds écartés de la largeur des hanches et les bras le longs du corps.",
       "En gardant le dos droit, faites une charnière au niveau des hanches pour vous penchez vers l'avant, en abaissant le haut du corps vers les jambes.",
       "Détendez votre tête, votre cou et vos bras et essayez de poser vos paumes sur le sol."
     ],
     "image": "public/2",
-    "duration": "30"
+    "duration": 30
   },
   {
     "id": "3",
-    "title": "fente avant",
+    "title": "Fente avant",
     "instructions": [
       "Commencez par vous agenouiller, les bras le long du corps.",
       "Avancez une jambe en plaçant votre pied à plat sur le sol devant vous.",
       "Pousez vos hanches vers l'avant et levez les bras au-dessus de la tête."
     ],
     "image": "public/3",
-    "duration": "30"
+    "duration": 30
   },
   {
     "id": "4",
-    "title": "fente avant deuxième jambe",
+    "title": "Fente avant deuxième jambe",
     "instructions": [
       "Commencez par vous agenouiller, les bras le long du corps.",
       "Avancez une jambe en plaçant votre pied à plat sur le sol devant vous.",
       "Pousez vos hanches vers l'avant et levez les bras au-dessus de la tête."
     ],
     "image": "public/3",
-    "duration": "30"
+    "duration": 30
   },
   {
     "id": "5",
-    "title": "chien face au ciel",
+    "title": "Chien face au ciel",
     "instructions": [
       "Commencez par vous allonger sur le ventre, les jambes tendues et les mains sous les épaules.",
       "Appuyez vos paumes sur le sol, en redressant les bras pour soulever le haut du corps et les jambes du sol.",
       "Soulevez votre poitrine, détendez vos épaules et regardez légèrement vers le haut."
     ],
     "image": "public/5",
-    "duration": "30"
+    "duration": 30
   },
   {
     "id": "6",
-    "title": "posture de l'enfant",
+    "title": "Posture de l'enfant",
     "instructions": [
       "Commencez à vous mettre à quatre pattes en position de table.",
       "Elargissez vos genoux et rapprochez vos gros orteils pour qu'ils se touchent.",
@@ -65,28 +65,28 @@
       "Détendez vos hanches et posez votre front sur le sol."
     ],
     "image": "public/6",
-    "duration": "30"
+    "duration": 30
   },
   {
     "id": "7",
-    "title": "chien tête en bas",
+    "title": "Chien tête en bas",
     "instructions": [
       "Commencez à vous mettre à quatre pattes en position de table.",
       "Rentrez vos orteils, appuyez vos paumes sur le sol et redressez vos bras et vos jambes pour soulevez vos hanches et les ramener vers l'arrière.",
       "Poussez votre poitrine vers vos cuisses et vos talons vers le sol."
     ],
     "image": "public/7",
-    "duration": "15"
+    "duration": 15
   },
   {
     "id": "8",
-    "title": "posture du grand angle",
+    "title": "Posture du grand angle",
     "instructions": [
       "Commencez en position debout, les pieds écartés et les orteils pointés vers l'avant.",
       "En gardant le dos doit, faites une charnière au niveau des hanches pour vous penchez vers l'avant, en abaissant le haut du corps vers les jambes.",
       "Détendez votre tête, votre cou et vos bras et essayez de poser vos paumes sur le sol."
     ],
     "image": "public/8",
-    "duration": "15"
+    "duration": 15
   }
 ]
