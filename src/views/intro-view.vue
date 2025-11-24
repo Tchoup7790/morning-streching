@@ -2,10 +2,12 @@
   <main>
     <div>
       <h1>Routine Matinale</h1>
-      <p>Commencez votre journée en douceur</p>
+      <p>Commencez votre journée en souplesse.</p>
     </div>
 
     <button @click="startRoutine">Commencer la séance</button>
+
+    <div />
   </main>
 </template>
 
@@ -18,3 +20,9 @@ function startRoutine() {
   router.push("/routine");
 }
 </script>
+
+<style scoped>
+main {
+  justify-content: space-between;
+}
+</style>

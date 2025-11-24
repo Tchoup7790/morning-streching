@@ -1,57 +1,37 @@
 <template>
-  <main>
-    <div v-if="store.currentExercise">
-      <!-- Progress indicator -->
-      <div>
-        <span>
-          Exercice {{ store.currentIndex + 1 }}/{{ store.exercises.length }}
-        </span>
-      </div>
+  <main v-if="store.currentExercise">
+    <!-- Progress indicator -->
+    <p>
+      Exercice {{ store.currentIndex + 1 }} sur {{ store.exercises.length }}
+    </p>
 
-      <!-- Progress bar -->
-      <div class="progress-bar-container">
-        <div
-          class="progress-bar"
-          :style="{
-            width: `${(store.currentIndex / store.exercises.length) * 100}%`,
-          }"
-        />
-      </div>
-
-      <!-- Exercise title -->
-      <div>
-        <h2>
-          {{ store.currentExercise.title }}
-        </h2>
-        <p>
-          {{ store.currentExercise.instructions }}
-        </p>
-      </div>
-
-      <!-- Exercise image -->
-      <div>
-        <img
-          :src="store.currentExercise.image"
-          :alt="store.currentExercise.title"
-        />
-      </div>
-
-      <!-- Timer -->
-      <div>
-        <CustomTimer
-          :key="store.currentExercise.id"
-          :duration="store.currentExercise.duration"
-          @finished="onExerciseFinished"
-        />
-      </div>
-
-      <!-- Skip button -->
-      <button @click="onExerciseFinished">Passer l'exercice</button>
+    <!-- Progress bar -->
+    <div class="progress-bar-container">
+      <div
+        class="progress-bar"
+        :style="{
+          width: `${((store.currentIndex + 1) / store.exercises.length) * 100}%`,
+        }"
+      />
     </div>
 
-    <div v-else>
-      <p>Erreur: Aucun exercice trouvé</p>
+    <!-- Exercise title -->
+    <div>
+      <h2>
+        {{ store.currentExercise.title }}
+      </h2>
     </div>
+    <!-- Timer -->
+    <CustomTimer
+      :key="store.currentExercise.id"
+      :duration="store.currentExercise.duration"
+      @finished="onExerciseFinished"
+    />
+
+    <!-- Skip button -->
+    <button @click="onExerciseFinished">
+      {{ store.hasNext ? "Passer l'exercice" : "Finir la routine" }}
+    </button>
   </main>
 </template>
 
@@ -75,10 +55,21 @@ function onExerciseFinished() {
 <style lang="css" scoped>
 .progress-bar-container {
   width: 100%;
-  background-color: grey;
+  height: 7px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--color-primary) 8%, transparent),
+    color-mix(in srgb, var(--color-primary) 16%, transparent)
+  );
+  border-radius: 999px;
+
+  overflow: hidden;
 }
+
 .progress-bar {
-  background-color: black;
-  height: 2px;
+  height: 100%;
+  background: var(--color-primary);
+  border-radius: 999px;
+  transition: width 0.35s ease;
 }
 </style>
