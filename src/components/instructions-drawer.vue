@@ -109,7 +109,7 @@ function close() {
 .timeline p {
   color: var(--rp-subtle);
   margin: 0;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.45;
   text-align: justify;
 }

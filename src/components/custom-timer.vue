@@ -43,7 +43,7 @@
           state.showDrawer = true;
         }
       "
-      >Voir instructions</a
+      >instructions</a
     >
 
     <!-- Pause / Resume button -->
