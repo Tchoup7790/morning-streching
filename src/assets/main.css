@@ -46,6 +46,7 @@ body {
   justify-content: center;
 }
 
+/* App div */
 #app {
   width: 100%;
   max-width: 500px;
@@ -59,6 +60,7 @@ body {
   flex-direction: column;
 }
 
+/* Main */
 main {
   display: flex;
   flex-direction: column;
@@ -71,6 +73,7 @@ main {
   box-sizing: border-box;
 }
 
+/* Button */
 button {
   padding: 8px 16px;
   font-size: 14px;
@@ -94,41 +97,21 @@ button {
   align-items: center;
 }
 
-/* Hover */
+/* Button:Hover */
 button:hover {
   background: color-mix(in srgb, var(--color-primary) 20%, transparent);
   border-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
   opacity: 0.95;
 }
 
-/* Pressed */
+/* Button:Pressed */
 button:active {
   background: color-mix(in srgb, var(--color-primary) 30%, transparent);
   border-color: var(--color-primary);
   opacity: 0.9;
 }
 
-/* Ghost  Button */
-.btn--ghost {
-  background: color-mix(in srgb, var(--rp-subtle) 10%, transparent);
-  color: var(--rp-subtle);
-  border: 1px solid color-mix(in srgb, var(--rp-subtle) 25%, transparent);
-}
-
-/* Hover */
-.btn--ghost:hover {
-  background: color-mix(in srgb, var(--rp-subtle) 20%, transparent);
-  border-color: color-mix(in srgb, var(--rp-subtle) 40%, transparent);
-  opacity: 0.95;
-}
-
-/* Pressed */
-.btn--ghost:active {
-  background: color-mix(in srgb, var(--rp-subtle) 30%, transparent);
-  border-color: var(--rp-subtle);
-  opacity: 0.9;
-}
-
+/* Anchor */
 a {
   text-decoration: underline;
   text-underline-offset: 2px;
@@ -145,13 +128,13 @@ a {
     opacity var(--transition);
 }
 
-/* Hover  */
+/* Anchor:Hover  */
 a:hover {
   color: var(--rp-text);
   opacity: 0.9;
 }
 
-/* Active */
+/* Anchor:Active */
 a:active {
   color: var(--color-primary);
   opacity: 1;

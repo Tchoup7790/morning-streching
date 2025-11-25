@@ -1,12 +1,14 @@
 <template>
+  <!-- Render only if an exercise is available -->
   <main v-if="store.currentExercise">
-    <!-- Progress indicator -->
+    <!-- Display exercise position in the routine -->
     <p>
       Exercice {{ store.currentIndex + 1 }} sur {{ store.exercises.length }}
     </p>
 
-    <!-- Progress bar -->
+    <!-- Wrapper for progress bar -->
     <div class="progress-bar-container">
+      <!-- Progress bar showing advancement through exercises -->
       <div
         class="progress-bar"
         :style="{
@@ -15,20 +17,21 @@
       />
     </div>
 
-    <!-- Exercise title -->
+    <!-- Exercise title section -->
     <div>
       <h2>
         {{ store.currentExercise.title }}
       </h2>
     </div>
-    <!-- Timer -->
+
+    <!-- Timer component for the current exercise -->
     <CustomTimer
       :key="store.currentExercise.id"
       :duration="store.currentExercise.duration"
       @finished="onExerciseFinished"
     />
 
-    <!-- Skip button -->
+    <!-- Skip or finish link -->
     <a href="#" @click.prevent="onExerciseFinished">
       {{ store.hasNext ? "Passer l'exercice" : "Finir la routine" }}
     </a>
@@ -36,23 +39,30 @@
 </template>
 
 <script setup lang="ts">
+// Router for navigation
 import { useRouter } from "vue-router";
+// Timer component
 import CustomTimer from "@/components/custom-timer.vue";
+// Routine store
 import { useRoutineStore } from "@/stores/routine.store";
 
 const router = useRouter();
 const store = useRoutineStore();
 
+// Callback fired when timer completes or skip is clicked
 function onExerciseFinished() {
+  // If there is a next exercise, move to it
   if (store.hasNext) {
     store.next();
   } else {
+    // Otherwise navigate to end page
     router.push({ name: "end" });
   }
 }
 </script>
 
 <style lang="css" scoped>
+/* Container that holds the background of the progress bar */
 .progress-bar-container {
   width: 100%;
   height: 7px;
@@ -62,10 +72,10 @@ function onExerciseFinished() {
     color-mix(in srgb, var(--color-primary) 16%, transparent)
   );
   border-radius: 999px;
-
   overflow: hidden;
 }
 
+/* Foreground progress bar showing how far the user is */
 .progress-bar {
   height: 100%;
   background: var(--color-primary);
