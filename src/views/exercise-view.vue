@@ -28,6 +28,8 @@
     <CustomTimer
       :key="store.currentExercise.id"
       :duration="store.currentExercise.duration"
+      :image="store.currentExercise.image"
+      :instructions="store.currentExercise.instructions"
       @finished="onExerciseFinished"
     />
 
@@ -39,11 +41,8 @@
 </template>
 
 <script setup lang="ts">
-// Router for navigation
 import { useRouter } from "vue-router";
-// Timer component
 import CustomTimer from "@/components/custom-timer.vue";
-// Routine store
 import { useRoutineStore } from "@/stores/routine.store";
 
 const router = useRouter();

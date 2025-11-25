@@ -35,15 +35,32 @@
     <p v-if="state.isWaiting" class="timer-status">Mettez vous en place.</p>
     <p v-else class="timer-status">C'est parti !</p>
 
+    <!-- Drawer Toggler -->
+    <a
+      href="#"
+      @click.prevent="
+        () => {
+          state.showDrawer = true;
+        }
+      "
+      >Voir instructions</a
+    >
+
     <!-- Pause / Resume button -->
     <button @click="togglePause">
       {{ state.isPaused ? "Reprendre" : "Pause" }}
     </button>
+
+    <InstructionsDrawer
+      v-model="state.showDrawer"
+      :instructions="props.instructions"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { gsap } from "gsap";
+import InstructionsDrawer from "./instructions-drawer.vue";
 import { onMounted, onUnmounted, reactive, ref } from "vue";
 
 // Audio for last three seconds
@@ -65,6 +82,14 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  image: {
+    type: String,
+    required: true,
+  },
+  instructions: {
+    type: Array<string>,
+    required: true,
+  },
 });
 
 // Reference to animated SVG circle
@@ -75,6 +100,7 @@ interface CustomTimerState {
   remaining: number; // seconds left in current phase
   isPaused: boolean; // pause status
   isWaiting: boolean; // indicates waiting or exercise phase
+  showDrawer: boolean; // show drawer
 }
 
 // Initial state values
@@ -82,6 +108,7 @@ const state: CustomTimerState = reactive({
   remaining: WAITING_TIME,
   isPaused: false,
   isWaiting: true,
+  showDrawer: false,
 });
 
 // Event emitted when exercise phase finishes
@@ -193,10 +220,10 @@ onUnmounted(() => gsapTween?.kill());
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
+  gap: 24px;
   width: 100%;
   max-width: 320px;
-  margin: 0 auto;
+  margin: 0;
   padding-bottom: 30px;
 }
 
@@ -209,6 +236,12 @@ onUnmounted(() => gsapTween?.kill());
 /* Subtle text color for status text */
 .timer-status {
   color: var(--rp-subtle);
+  margin: 0;
+}
+
+/* No margin for timer value */
+.timer-value {
+  margin: 0;
 }
 
 /* Background arc style */
