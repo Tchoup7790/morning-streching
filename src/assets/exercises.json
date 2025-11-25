@@ -24,7 +24,7 @@
   },
   {
     "id": "3",
-    "title": "Fente avant",
+    "title": "Fente avant droite",
     "instructions": [
       "Commencez par vous agenouiller, les bras le long du corps.",
       "Avancez une jambe en plaçant votre pied à plat sur le sol devant vous.",
@@ -35,7 +35,7 @@
   },
   {
     "id": "4",
-    "title": "Fente avant deuxième jambe",
+    "title": "Fente avant gauche",
     "instructions": [
       "Commencez par vous agenouiller, les bras le long du corps.",
       "Avancez une jambe en plaçant votre pied à plat sur le sol devant vous.",
@@ -80,7 +80,7 @@
   },
   {
     "id": "8",
-    "title": "Posture du grand angle",
+    "title": "Posture grand angle",
     "instructions": [
       "Commencez en position debout, les pieds écartés et les orteils pointés vers l'avant.",
       "En gardant le dos droit, faites une charnière au niveau des hanches pour vous penchez vers l'avant, en abaissant le haut du corps vers les jambes.",

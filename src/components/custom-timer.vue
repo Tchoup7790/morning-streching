@@ -1,8 +1,8 @@
 <template>
   <div class="container">
-    <!-- Arc timer -->
+    <!-- SVG circular timer wrapper -->
     <svg :width="SIZE" :height="SIZE" class="timer-svg">
-      <!-- Background circle -->
+      <!-- Static background arc -->
       <circle
         :cx="CENTER"
         :cy="CENTER"
@@ -12,7 +12,7 @@
         class="timer-bg"
       />
 
-      <!-- Animated circle -->
+      <!-- Dynamic animated arc -->
       <circle
         ref="progressCircle"
         :cx="CENTER"
@@ -21,114 +21,141 @@
         :stroke-width="STROKE"
         fill="none"
         stroke-linecap="round"
-        stroke="url(#rp-gradient)"
         :stroke-dasharray="CIRCUMFERENCE"
         :stroke-dashoffset="CIRCUMFERENCE"
         style="transform: rotate(-90deg); transform-origin: 50% 50%"
         class="timer-progress"
       />
-
-      <!-- Rose-Pine gradient -->
-      <defs>
-        <linearGradient id="rp-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" :style="{ stopColor: 'var(--rp-iris)' }" />
-          <stop offset="100%" :style="{ stopColor: 'var(--rp-foam)' }" />
-        </linearGradient>
-      </defs>
     </svg>
 
-    <!-- Numeric timer -->
+    <!-- Remaining time -->
     <h3 class="timer-value">{{ state.remaining }}s</h3>
 
-    <!-- Timer status -->
-    <p v-if="state.isWaiting" class="timer-status">Mettez vous en place !</p>
+    <!-- Status label depending on phase -->
+    <p v-if="state.isWaiting" class="timer-status">Mettez vous en place.</p>
+    <p v-else class="timer-status">C'est parti !</p>
+
+    <!-- Drawer Toggler -->
+    <a href="#" @click.prevent="openDrawer">Instructions</a>
 
     <!-- Pause / Resume button -->
     <button @click="togglePause">
       {{ state.isPaused ? "Reprendre" : "Pause" }}
     </button>
+
+    <InstructionsDrawer
+      v-model="state.showDrawer"
+      :instructions="props.instructions"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { gsap } from "gsap";
-import { onMounted, onUnmounted, reactive, ref } from "vue";
+import InstructionsDrawer from "./instructions-drawer.vue";
+import { onMounted, onUnmounted, reactive, ref, type PropType } from "vue";
 
-const beep = new Audio("/beep.mp3");
-beep.preload = "auto";
+// Audio for last three seconds
+const beepD = new Audio("/sounds/beep-down.mp3");
+beepD.preload = "auto";
 
+const beepU = new Audio("/sounds/beep-up.mp3");
+beepU.preload = "auto";
+
+// Waiting time before exercise starts
 const WAITING_TIME = 10;
 
+// Store last remaining value to avoid repeated sound calls
 let lastRemaining = WAITING_TIME;
 
+// Props from parent defining exercise duration
 const props = defineProps({
   duration: {
     type: Number,
     required: true,
   },
+  image: {
+    type: String,
+    required: true,
+  },
+  instructions: {
+    type: Array as PropType<string[]>,
+    required: true,
+  },
 });
 
+// Reference to animated SVG circle
 const progressCircle = ref<SVGCircleElement | null>(null);
 
+// State structure
 interface CustomTimerState {
-  remaining: number;
-  isPaused: boolean;
-  isWaiting: boolean;
+  remaining: number; // seconds left in current phase
+  isPaused: boolean; // pause status
+  isWaiting: boolean; // indicates waiting or exercise phase
+  showDrawer: boolean; // show drawer
 }
 
+// Initial state values
 const state: CustomTimerState = reactive({
   remaining: WAITING_TIME,
   isPaused: false,
   isWaiting: true,
+  showDrawer: false,
 });
 
+// Event emitted when exercise phase finishes
 const emit = defineEmits<{
   (e: "finished"): void;
 }>();
 
-// SVG
-const SIZE = window.innerWidth < 640 ? 200 : 300;
+// SVG dimensions and geometry
+const SIZE = 250;
 const STROKE = 10;
 const CENTER = SIZE / 2;
 const RADIUS = (SIZE - STROKE) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
+// GSAP animation reference
 let gsapTween: gsap.core.Tween | null = null;
 
+// Function handling timer animation
 function runTimer(duration: number, onDone: () => void) {
   if (!progressCircle.value) return;
 
+  // Kill previous animations if any
   gsapTween?.kill();
 
   state.remaining = duration;
   const anim = { progress: 0 };
 
+  // Reset arc to full circle
   gsap.set(progressCircle.value, {
     strokeDashoffset: CIRCUMFERENCE,
   });
 
+  // Start animation
   gsapTween = gsap.to(anim, {
     progress: 1,
     duration,
     ease: "none",
     onUpdate: () => {
+      // Update arc visual offset
       const offset = CIRCUMFERENCE * (1 - anim.progress);
-      gsap.set(progressCircle.value!, { strokeDashoffset: offset });
+      gsap.set(progressCircle.value, { strokeDashoffset: offset });
 
-      state.remaining = Math.ceil(duration * (1 - anim.progress));
-
+      // Update remaining seconds
       const newRemaining = Math.ceil(duration * (1 - anim.progress));
       state.remaining = newRemaining;
 
-      // Play sound on 3, 2, 1 — only once per second
+      // Trigger sound during last 3 seconds
       if (
         lastRemaining !== newRemaining &&
         newRemaining <= 3 &&
         newRemaining > 0
       ) {
         try {
-          beep.currentTime = 0;
-          beep.play();
+          beepD.currentTime = 0;
+          beepD.play();
         } catch (_) {}
       }
 
@@ -138,20 +165,28 @@ function runTimer(duration: number, onDone: () => void) {
   });
 }
 
+// Combined waiting + exercise cycle
 function startFullCycle() {
   state.isWaiting = true;
 
-  // Phase 1 : attente
+  // Beep on start
+  try {
+    beepU.currentTime = 0;
+    beepU.play();
+  } catch (_) {}
+
+  // First run: waiting countdown
   runTimer(WAITING_TIME, () => {
     state.isWaiting = false;
 
-    // Phase 2 : exercice
+    // Second run: exercise countdown
     runTimer(props.duration, () => {
       emit("finished");
     });
   });
 }
 
+// Pause or resume animation
 function togglePause() {
   if (!gsapTween) return;
 
@@ -164,40 +199,57 @@ function togglePause() {
   }
 }
 
+function openDrawer() {
+  if (!state.isPaused) {
+    togglePause();
+  }
+  state.showDrawer = true;
+}
+
+// Start on mount
 onMounted(() => startFullCycle());
+
+// Clean animation on destroy
 onUnmounted(() => gsapTween?.kill());
 </script>
 
 <style scoped>
+/* Main layout wrapper */
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 18px;
+  gap: 24px;
   width: 100%;
   max-width: 320px;
-  margin: 0 auto;
-  padding-bottom: 20px;
+  margin: 0;
+  padding-bottom: 30px;
 }
 
-/* SVG */
+/* Ensures SVG remains centered and spaced */
 .timer-svg {
   display: block;
   padding: 20px 0;
 }
 
-/* Timer Status (subtle) */
+/* Subtle text color for status text */
 .timer-status {
   color: var(--rp-subtle);
+  margin: 0;
 }
 
-/* Base circle (subtle) */
+/* No margin for timer value */
+.timer-value {
+  margin: 0;
+}
+
+/* Background arc style */
 .timer-bg {
   stroke: var(--rp-overlay);
   opacity: 0.6;
 }
 
-/* Progress arc */
+/* Foreground animated arc */
 .timer-progress {
   stroke: var(--color-primary);
   transition: stroke-dashoffset 0.25s linear;
