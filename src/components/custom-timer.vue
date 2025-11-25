@@ -32,14 +32,15 @@
     <h3 class="timer-value">{{ state.remaining }}s</h3>
 
     <!-- Status label depending on phase -->
-    <p v-if="state.isWaiting" class="timer-status">Mettez vous en place.</p>
-    <p v-else class="timer-status">C'est parti !</p>
+    <p class="timer-status" ref="statusRef">
+      {{ state.isWaiting ? "Mettez vous en place." : "C'est parti !" }}
+    </p>
 
     <!-- Drawer Toggler -->
     <a href="#" @click.prevent="openDrawer">Instructions</a>
 
     <!-- Pause / Resume button -->
-    <button @click="togglePause">
+    <button @click="togglePause" ref="pauseRef">
       {{ state.isPaused ? "Reprendre" : "Pause" }}
     </button>
 
@@ -53,7 +54,14 @@
 <script setup lang="ts">
 import { gsap } from "gsap";
 import InstructionsDrawer from "./instructions-drawer.vue";
-import { onMounted, onUnmounted, reactive, ref, type PropType } from "vue";
+import {
+  onMounted,
+  onUnmounted,
+  reactive,
+  ref,
+  watch,
+  type PropType,
+} from "vue";
 
 // Audio for last three seconds
 const beepD = new Audio("/sounds/beep-down.mp3");
@@ -84,8 +92,11 @@ const props = defineProps({
   },
 });
 
-// Reference to animated SVG circle
+// Reference to animated
 const progressCircle = ref<SVGCircleElement | null>(null);
+const timeRef = ref<HTMLElement | null>(null);
+const statusRef = ref<Element | null>(null);
+const pauseRef = ref<Element | null>(null);
 
 // State structure
 interface CustomTimerState {
@@ -211,6 +222,34 @@ onMounted(() => startFullCycle());
 
 // Clean animation on destroy
 onUnmounted(() => gsapTween?.kill());
+
+// Animate status text ("Mettez-vous en place." / "C'est parti !")
+watch(
+  () => state.isWaiting,
+  () => {
+    if (!statusRef.value) return;
+
+    gsap.fromTo(
+      statusRef.value,
+      { y: 10, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.3, ease: "power3.out" },
+    );
+  },
+);
+
+// Animate Pause / Reprendre
+watch(
+  () => state.isPaused,
+  () => {
+    if (!pauseRef.value) return;
+
+    gsap.fromTo(
+      pauseRef.value,
+      { scale: 0.8, opacity: 0 },
+      { scale: 1, opacity: 1, duration: 0.25, ease: "back.out(2)" },
+    );
+  },
+);
 </script>
 
 <style scoped>

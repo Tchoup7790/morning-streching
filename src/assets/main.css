@@ -44,6 +44,8 @@ body {
   font-family: "0xProto Nerd Font", monospace;
   display: flex;
   justify-content: center;
+
+  overflow: hidden;
 }
 
 /* App div */
