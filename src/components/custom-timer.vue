@@ -28,6 +28,11 @@
       />
     </svg>
 
+    <!-- Image centered OVER the circle -->
+    <div class="image-wrapper" ref="imageRef">
+      <img :src="props.image" alt="exercice-image" class="exercise-image" />
+    </div>
+
     <!-- Remaining time -->
     <h3 class="timer-value">{{ state.remaining }}s</h3>
 
@@ -255,6 +260,7 @@ watch(
 <style scoped>
 /* Main layout wrapper */
 .container {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -292,5 +298,28 @@ watch(
 .timer-progress {
   stroke: var(--color-primary);
   transition: stroke-dashoffset 0.25s linear;
+}
+
+.image-wrapper {
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--color-primary);
+  background: var(--rp-surface);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.exercise-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>
