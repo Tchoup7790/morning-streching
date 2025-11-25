@@ -47,8 +47,11 @@ import { gsap } from "gsap";
 import { onMounted, onUnmounted, reactive, ref } from "vue";
 
 // Audio for last three seconds
-const beep = new Audio("/beep.mp3");
-beep.preload = "auto";
+const beepD = new Audio("/sounds/beep-down.mp3");
+beepD.preload = "auto";
+
+const beepU = new Audio("/sounds/beep-up.mp3");
+beepU.preload = "auto";
 
 // Waiting time before exercise starts
 const WAITING_TIME = 10;
@@ -132,8 +135,8 @@ function runTimer(duration: number, onDone: () => void) {
         newRemaining > 0
       ) {
         try {
-          beep.currentTime = 0;
-          beep.play();
+          beepD.currentTime = 0;
+          beepD.play();
         } catch (_) {}
       }
 
@@ -146,6 +149,12 @@ function runTimer(duration: number, onDone: () => void) {
 // Combined waiting + exercise cycle
 function startFullCycle() {
   state.isWaiting = true;
+
+  // Beep on start
+  try {
+    beepU.currentTime = 0;
+    beepU.play();
+  } catch (_) {}
 
   // First run: waiting countdown
   runTimer(WAITING_TIME, () => {
