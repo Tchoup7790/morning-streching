@@ -36,15 +36,7 @@
     <p v-else class="timer-status">C'est parti !</p>
 
     <!-- Drawer Toggler -->
-    <a
-      href="#"
-      @click.prevent="
-        () => {
-          state.showDrawer = true;
-        }
-      "
-      >Instructions</a
-    >
+    <a href="#" @click.prevent="openDrawer">Instructions</a>
 
     <!-- Pause / Resume button -->
     <button @click="togglePause">
@@ -205,6 +197,13 @@ function togglePause() {
     gsapTween.pause();
     state.isPaused = true;
   }
+}
+
+function openDrawer() {
+  if (!state.isPaused) {
+    togglePause();
+  }
+  state.showDrawer = true;
 }
 
 // Start on mount
