@@ -1,8 +1,8 @@
 <template>
   <div>
-    <!-- SVG circular timer wrapper -->
+    <!-- SVG circular timer -->
     <svg :width="SIZE" :height="SIZE" class="timer-svg">
-      <!-- Static background arc -->
+      <!-- Static background ring -->
       <circle
         :cx="CENTER"
         :cy="CENTER"
@@ -12,7 +12,7 @@
         class="timer-bg"
       />
 
-      <!-- Dynamic animated arc -->
+      <!-- Animated progress ring -->
       <circle
         ref="progressCircle"
         :cx="CENTER"
@@ -28,15 +28,15 @@
       />
     </svg>
 
-    <!-- Image centered OVER the circle -->
+    <!-- Centered exercise image above the SVG -->
     <div class="image-wrapper">
       <img :src="props.image" alt="exercice-image" class="exercise-image" />
     </div>
 
-    <!-- Remaining time -->
+    <!-- Remaining time display -->
     <h3 class="timer-value">{{ state.remaining }}s</h3>
 
-    <!-- Drawer Toggler -->
+    <!-- Drawer trigger -->
     <a href="#" @click.prevent="emit('openDrawer')">Instructions</a>
   </div>
 </template>
@@ -45,104 +45,92 @@
 import { gsap } from "gsap";
 import { onUnmounted, reactive, ref, watch } from "vue";
 
-// Audio for last three seconds
+// Beep for last 3 seconds
 const beepD = new Audio("/sounds/beep-down.mp3");
 beepD.preload = "auto";
 
-// Audio for first second
+// Beep at start of timer
 const beepU = new Audio("/sounds/beep-up.mp3");
 beepU.preload = "auto";
 
-// Props from parent defining exercise duration
+// Props coming from parent
 const props = defineProps({
-  duration: {
-    type: Number,
-    required: true,
-  },
-  image: {
-    type: String,
-    required: true,
-  },
-  isPaused: {
-    type: Boolean,
-    required: true,
-  },
+  duration: { type: Number, required: true },
+  image: { type: String, required: true },
+  isPaused: { type: Boolean, required: true },
 });
 
-// Reference to animated circle
+// SVG progress ring reference
 const progressCircle = ref<SVGCircleElement | null>(null);
 
-// State structure
+// Local timer state
 interface CustomTimerState {
-  remaining: number; // seconds left in current phase
-  lastRemaining: number; // last second left in current phase
+  remaining: number; // current second displayed
+  lastRemaining: number; // previous second (used to prevent repeated beeps)
 }
 
-// Initial state values
 const state: CustomTimerState = reactive({
   remaining: 0,
   lastRemaining: 0,
 });
 
-// Event emitted when exercise phase finishes
+// Emits events to parent
 const emit = defineEmits<{
   (e: "openDrawer"): void;
   (e: "finished"): void;
 }>();
 
-// SVG dimensions and geometry
+// Geometry values for the circular timer
 const SIZE = 250;
 const STROKE = 10;
 const CENTER = SIZE / 2;
 const RADIUS = (SIZE - STROKE) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
-// GSAP animation reference
+// GSAP tween instance
 let gsapTween: gsap.core.Tween | null = null;
 
-// Function handling timer animation
+// Handles sounds, arc animation and remaining seconds logic.
 function runTimer(duration: number, onDone: () => void) {
   if (!progressCircle.value) return;
 
-  // Kill previous animations if any
+  // Stop previous GSAP animation
   gsapTween?.kill();
 
-  // Make remaining the duration of the animation
+  // Reset timer state
   state.remaining = duration;
-
-  // Reset animation
   const anim = { progress: 0 };
 
-  // Trigger start sound
+  // Start beep
   try {
     beepU.currentTime = 0;
     beepU.play();
   } catch (_) {}
 
-  // Reset arc to full circle
+  // Reset SVG arc offset
   gsap.set(progressCircle.value, {
     strokeDashoffset: CIRCUMFERENCE,
   });
 
-  // Start animation
+  // Start GSAP animation
   gsapTween = gsap.to(anim, {
     progress: 1,
     duration,
     ease: "none",
     onUpdate: () => {
-      // Update arc visual offset
+      // Update SVG stroke offset
       const offset = CIRCUMFERENCE * (1 - anim.progress);
       gsap.set(progressCircle.value, { strokeDashoffset: offset });
 
-      // Update remaining seconds
+      // Compute remaining seconds
       const newRemaining = Math.ceil(duration * (1 - anim.progress));
       state.remaining = newRemaining;
 
-      // Trigger sound during last 3 seconds
+      // Play beep only when value changes and in last 3 seconds
       if (
         state.lastRemaining !== newRemaining &&
-        state.remaining <= 3 &&
-        state.remaining > 0
+        newRemaining <= 3 &&
+        newRemaining > 0
       ) {
         try {
           beepD.currentTime = 0;
@@ -156,74 +144,73 @@ function runTimer(duration: number, onDone: () => void) {
   });
 }
 
-// Handle new duration
+// Restart timer when duration prop changes
 watch(
   () => props.duration,
   (value) => {
-    if (value) {
-      runTimer(value, () => emit("finished"));
-    }
+    if (value) runTimer(value, () => emit("finished"));
   },
 );
 
-// Handle Pause/Resume
+// Pause / resume animation
 watch(
   () => props.isPaused,
-  (value) => {
+  (paused) => {
     if (!gsapTween) return;
-
-    if (!value) {
-      gsapTween.resume();
-    } else {
-      gsapTween.pause();
-    }
+    paused ? gsapTween.pause() : gsapTween.resume();
   },
 );
 
-// Clean animation on destroy
+// Cleanup on destroy
 onUnmounted(() => gsapTween?.kill());
 </script>
 
 <style scoped>
+/* Ensures the SVG stays centered with consistent spacing */
 .timer-svg {
   display: block;
   padding: 20px 0;
 }
 
+/* Removes default margin from the timer text */
 .timer-value {
   margin: 0;
 }
 
+/* Background ring style (static circle) */
 .timer-bg {
   stroke: var(--rp-overlay);
   opacity: 0.6;
 }
 
+/* Foreground animated ring */
 .timer-progress {
   stroke: var(--color-primary);
-  transition: stroke-dashoffset 0.25s linear;
+  transition: stroke-dashoffset 0.25s linear; /* smooth visual fallback */
 }
 
+/* Circle wrapper housing the exercise image */
 .image-wrapper {
-  position: absolute;
-  top: 60px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: absolute; /* floats above the SVG */
+  top: 60px; /* manually centered vertically */
+  left: 50%; /* horizontal centering */
+  transform: translateX(-50%); /* adjust anchor for true center */
   width: 160px;
   height: 160px;
-  border-radius: 50%;
-  overflow: hidden;
+  border-radius: 50%; /* perfect circle */
+  overflow: hidden; /* image clipped cleanly inside */
   border: 3px solid var(--color-primary);
-  background: var(--rp-surface);
+  background: var(--rp-surface); /* fallback if image not loaded */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10;
+  z-index: 10; /* ensures image is above SVG */
 }
 
+/* Makes the image fill the circle while preserving aspect ratio */
 .exercise-image {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover; /* crops nicely inside circle */
 }
 </style>
