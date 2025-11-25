@@ -6,7 +6,7 @@
       <h2>Félicitations !</h2>
 
       <!-- Completion message -->
-      <p>Vous avez terminé votre routine matinale.</p>
+      <p>Vous avez terminé.</p>
       <br />
       <p>La journée peut maintenant commencer :)</p>
     </div>
