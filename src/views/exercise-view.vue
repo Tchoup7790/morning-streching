@@ -28,7 +28,7 @@
     <CustomTimer
       :key="store.currentExercise.id"
       :duration="store.currentExercise.duration"
-      :image="store.currentExercise.image"
+      image="/exercises/test.jpg"
       :instructions="store.currentExercise.instructions"
       @finished="onExerciseFinished"
     />
