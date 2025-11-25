@@ -43,7 +43,7 @@
           state.showDrawer = true;
         }
       "
-      >instructions</a
+      >Instructions</a
     >
 
     <!-- Pause / Resume button -->
@@ -61,7 +61,7 @@
 <script setup lang="ts">
 import { gsap } from "gsap";
 import InstructionsDrawer from "./instructions-drawer.vue";
-import { onMounted, onUnmounted, reactive, ref } from "vue";
+import { onMounted, onUnmounted, reactive, ref, type PropType } from "vue";
 
 // Audio for last three seconds
 const beepD = new Audio("/sounds/beep-down.mp3");
@@ -87,7 +87,7 @@ const props = defineProps({
     required: true,
   },
   instructions: {
-    type: Array<string>,
+    type: Array as PropType<string[]>,
     required: true,
   },
 });

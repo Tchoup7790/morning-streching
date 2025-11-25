@@ -1,12 +1,19 @@
 <template>
   <!-- Overlay -->
-  <div v-if="modelValue" class="overlay" @click.self="close">
+  <div
+    v-if="modelValue"
+    class="overlay"
+    @click.self="close"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="instructions-title"
+  >
     <!-- Bottom Sheet -->
     <div class="drawer">
       <!-- Header -->
       <header class="drawer-header">
         <h2>Instructions</h2>
-        <button class="close-btn" @click="close">✕</button>
+        <button class="close-btn" @click="close" aria-label="Close">✕</button>
       </header>
 
       <!-- Timeline -->
@@ -56,8 +63,12 @@ function close() {
 .drawer {
   width: 100%;
 
-  border-top: 2px solid var(--color-primary);
-  border: 1px solid color-mix(in srgb, var(--color-primary) 25%, transparent);
+  border-top: 1px solid
+    color-mix(in srgb, var(--color-primary) 25%, transparent);
+  border-left: 1px solid
+    color-mix(in srgb, var(--color-primary) 25%, transparent);
+  border-right: 1px solid
+    color-mix(in srgb, var(--color-primary) 25%, transparent);
   border-radius: var(--radius) var(--radius) 0 0;
   background: var(--rp-surface);
 
