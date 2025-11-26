@@ -45,7 +45,6 @@ body {
 
   overflow: hidden;
 
-  background: radial-gradient(circle at top left, var(--rp-overlay) 5%, var(--rp-base) 60%);
   background-color: var(--rp-base);
 }
 

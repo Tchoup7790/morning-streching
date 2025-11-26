@@ -58,10 +58,10 @@ export function useArcTimer(
       const offset = CIRCUMFERENCE * (1 - anim.progress)
       gsap.set(circle, { strokeDashoffset: offset })
 
-      const remaining = Math.ceil(duration * (1 - anim.progress))
+      const remaining = Math.max(0, Math.floor(duration * (1 - anim.progress)))
 
       // Last 3-second warning beep
-      if (remaining !== lastRemaining && remaining <= 3 && remaining > 0) {
+      if (remaining < lastRemaining && remaining <= 3 && remaining > 0) {
         try {
           beepDown.currentTime = 0
           beepDown.play()
