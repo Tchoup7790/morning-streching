@@ -8,15 +8,14 @@
 
     <!-- Button to start the routine -->
     <button @click="startRoutine">Commencer la séance</button>
-
-    <!-- Placeholder to keep layout spacing -->
-    <div />
   </main>
 </template>
 
 <script setup lang="ts">
 // Router instance for navigation
 import { useRouter } from "vue-router";
+import { onMounted } from "vue";
+import { gsap } from "gsap";
 
 const router = useRouter();
 
@@ -24,11 +23,22 @@ const router = useRouter();
 function startRoutine() {
   router.push("/routine");
 }
+
+onMounted(() => {
+  gsap.from("main > *", {
+    y: 20,
+    duration: 1,
+    stagger: 0.12,
+    ease: "expo.out",
+    delay: 0.1,
+  });
+});
 </script>
 
 <style scoped>
 /* Ensures spacing inside the main container */
 main {
-  justify-content: space-between;
+  height: 100%;
+  justify-content: space-around;
 }
 </style>
