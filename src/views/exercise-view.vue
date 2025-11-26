@@ -1,32 +1,37 @@
 <template>
+  <!-- Main wrapper – only shown if an exercise exists -->
   <main v-if="store.currentExercise">
-    <p>Exercice {{ store.currentIndex + 1 }}sur {{ store.exercises.length }}</p>
+    <!-- Display current exercise index -->
+    <p>
+      Exercice {{ store.currentIndex + 1 }} sur {{ store.exercises.length }}
+    </p>
 
+    <!-- Progress bar visualising how many exercises are completed -->
     <div class="progress-bar-container">
       <div
         class="progress-bar"
         :style="{
+          // Percentage = (currentIndex + 1) / total exercises
           width: `${((store.currentIndex + 1) / store.exercises.length) * 100}%`,
         }"
       />
     </div>
 
+    <!-- Exercise title -->
     <div>
       <h2>{{ store.currentExercise.title }}</h2>
     </div>
 
+    <!-- Timer for the current exercise (key forces reset on change) -->
     <CustomTimer
       :key="store.currentExercise.id"
       :duration="store.currentExercise.duration"
       :waiting-time="store.waitingTime"
-      image="/exercises/test.jpg"
       :instructions="store.currentExercise.instructions"
+      :has-next="store.hasNext"
+      image="/exercises/test.jpg"
       @finished="onExerciseFinished"
     />
-
-    <a href="#" @click.prevent="onExerciseFinished">
-      {{ store.hasNext ? "Passer l'exercice" : "Finir la routine" }}
-    </a>
   </main>
 </template>
 
@@ -37,13 +42,18 @@ import CustomTimer from "@/components/custom-timer.vue";
 import { useStaggerAnimation } from "@/composables/use-stagger-animation";
 import { useRoutineStore } from "@/stores/routine.store";
 
+// Router instance
 const router = useRouter();
+
+// Pinia store for routine management
 const store = useRoutineStore();
 
+// Handles what happens when the timer finishes
 function onExerciseFinished() {
   store.hasNext ? store.next() : router.push({ name: "end" });
 }
 
+// Play a staggered animation on initial render
 onMounted(() => useStaggerAnimation("main > :nth-child(-n+3), main > a"));
 </script>
 
@@ -51,11 +61,7 @@ onMounted(() => useStaggerAnimation("main > :nth-child(-n+3), main > a"));
 .progress-bar-container {
   width: 100%;
   height: 7px;
-  background: linear-gradient(
-    90deg,
-    color-mix(in srgb, var(--color-primary) 8%, transparent),
-    color-mix(in srgb, var(--color-primary) 16%, transparent)
-  );
+  background: var(--rp-overlay);
   border-radius: 999px;
   overflow: hidden;
 }

@@ -14,11 +14,15 @@
       {{ state.isWaiting ? "Mettez vous en place." : "C'est parti !" }}
     </p>
 
-    <!-- Pause / Resume button -->
-    <button @click="togglePause" ref="pauseRef">
-      {{ state.isPaused ? "Reprendre" : "Pause" }}
-    </button>
+    <div>
+      <button @click="togglePause" ref="pauseRef">
+        {{ state.isPaused ? "Reprendre" : "Pause" }}
+      </button>
 
+      <button @click="emit('finished')">
+        {{ props.hasNext ? "➡️" : "🏁" }}
+      </button>
+    </div>
     <!-- Drawer with instructions -->
     <InstructionsDrawer
       v-model="state.showDrawer"
@@ -38,6 +42,7 @@ const props = defineProps({
   duration: { type: Number, required: true },
   waitingTime: { type: Number, required: true },
   image: { type: String, required: true },
+  hasNext: { type: Boolean, required: true },
   instructions: { type: Array as PropType<string[]>, required: true },
 });
 
