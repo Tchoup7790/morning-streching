@@ -14,20 +14,20 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
-import { useRouter } from "vue-router";
-import { useStaggerAnimation } from "@/composables/use-stagger-animation";
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { useStaggerAnimation } from '@/composables/use-stagger-animation'
 
 // Router instance used for navigation
-const router = useRouter();
+const router = useRouter()
 
 // Navigate to the routine page when the button is clicked
 function startRoutine() {
-  router.push("/routine");
+  router.push('/routine')
 }
 
 // Animate titles and button with a staggered entrance
-onMounted(() => useStaggerAnimation("main > div > *, main > button"));
+onMounted(() => useStaggerAnimation('main > div > *, main > button'))
 </script>
 
 <style scoped>

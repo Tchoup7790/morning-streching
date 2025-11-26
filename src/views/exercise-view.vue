@@ -2,9 +2,7 @@
   <!-- Render only if an exercise is available -->
   <main v-if="store.currentExercise">
     <!-- Display exercise position in the routine -->
-    <p>
-      Exercice {{ store.currentIndex + 1 }} sur {{ store.exercises.length }}
-    </p>
+    <p>Exercice {{ store.currentIndex + 1 }}sur {{ store.exercises.length }}</p>
 
     <!-- Wrapper for progress bar -->
     <div class="progress-bar-container">
@@ -19,9 +17,7 @@
 
     <!-- Exercise title section -->
     <div>
-      <h2>
-        {{ store.currentExercise.title }}
-      </h2>
+      <h2>{{ store.currentExercise.title }}</h2>
     </div>
 
     <!-- Timer component for the current exercise -->
@@ -41,21 +37,21 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from "vue-router";
-import CustomTimer from "@/components/custom-timer.vue";
-import { useRoutineStore } from "@/stores/routine.store";
+import { useRouter } from 'vue-router'
+import CustomTimer from '@/components/custom-timer.vue'
+import { useRoutineStore } from '@/stores/routine.store'
 
-const router = useRouter();
-const store = useRoutineStore();
+const router = useRouter()
+const store = useRoutineStore()
 
 // Callback fired when timer completes or skip is clicked
 function onExerciseFinished() {
   // If there is a next exercise, move to it
   if (store.hasNext) {
-    store.next();
+    store.next()
   } else {
     // Otherwise navigate to end page
-    router.push({ name: "end" });
+    router.push({ name: 'end' })
   }
 }
 </script>

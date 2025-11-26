@@ -1,4 +1,4 @@
-import { gsap } from "gsap";
+import { gsap } from 'gsap'
 
 // Animate all elements matching the selector when the component mounts
 export function useStaggerAnimation(selector: string, delay: number = 0.3, stagger: number = 0.15) {
@@ -7,7 +7,7 @@ export function useStaggerAnimation(selector: string, delay: number = 0.3, stagg
     opacity: 0, // Start fully transparent
     duration: 0.7, // Duration of each element animation
     stagger: stagger, // Delay between each item to create a wave effect
-    ease: "power2.out", // Smooth easing for a pleasant appearance
+    ease: 'power2.out', // Smooth easing for a pleasant appearance
     delay: delay, // Global delay before the animation starts
-  });
+  })
 }

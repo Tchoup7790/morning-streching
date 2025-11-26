@@ -30,7 +30,7 @@
 
     <!-- Centered exercise image above the SVG -->
     <div class="image-wrapper">
-      <img :src="props.image" alt="exercice-image" class="exercise-image" />
+      <img :src="props.image" alt="exercice-image" class="exercise-image">
     </div>
 
     <!-- Remaining time display -->
@@ -42,127 +42,123 @@
 </template>
 
 <script setup lang="ts">
-import { gsap } from "gsap";
-import { onUnmounted, reactive, ref, watch } from "vue";
+import { gsap } from 'gsap'
+import { onUnmounted, reactive, ref, watch } from 'vue'
 
 // Beep for last 3 seconds
-const beepD = new Audio("/sounds/beep-down.mp3");
-beepD.preload = "auto";
+const beepD = new Audio('/sounds/beep-down.mp3')
+beepD.preload = 'auto'
 
 // Beep at start of timer
-const beepU = new Audio("/sounds/beep-up.mp3");
-beepU.preload = "auto";
+const beepU = new Audio('/sounds/beep-up.mp3')
+beepU.preload = 'auto'
 
 // Props coming from parent
 const props = defineProps({
   duration: { type: Number, required: true },
   image: { type: String, required: true },
   isPaused: { type: Boolean, required: true },
-});
+})
 
 // SVG progress ring reference
-const progressCircle = ref<SVGCircleElement | null>(null);
+const progressCircle = ref<SVGCircleElement | null>(null)
 
 // Local timer state
 interface CustomTimerState {
-  remaining: number; // current second displayed
-  lastRemaining: number; // previous second (used to prevent repeated beeps)
+  remaining: number // current second displayed
+  lastRemaining: number // previous second (used to prevent repeated beeps)
 }
 
 const state: CustomTimerState = reactive({
   remaining: 0,
   lastRemaining: 0,
-});
+})
 
 // Emits events to parent
 const emit = defineEmits<{
-  (e: "openDrawer"): void;
-  (e: "finished"): void;
-}>();
+  (e: 'openDrawer'): void
+  (e: 'finished'): void
+}>()
 
 // Geometry values for the circular timer
-const SIZE = 250;
-const STROKE = 10;
-const CENTER = SIZE / 2;
-const RADIUS = (SIZE - STROKE) / 2;
-const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+const SIZE = 250
+const STROKE = 10
+const CENTER = SIZE / 2
+const RADIUS = (SIZE - STROKE) / 2
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
 // GSAP tween instance
-let gsapTween: gsap.core.Tween | null = null;
+let gsapTween: gsap.core.Tween | null = null
 
 // Handles sounds, arc animation and remaining seconds logic.
 function runTimer(duration: number, onDone: () => void) {
-  if (!progressCircle.value) return;
+  if (!progressCircle.value) return
 
   // Stop previous GSAP animation
-  gsapTween?.kill();
+  gsapTween?.kill()
 
   // Reset timer state
-  state.remaining = duration;
-  const anim = { progress: 0 };
+  state.remaining = duration
+  const anim = { progress: 0 }
 
   // Start beep
   try {
-    beepU.currentTime = 0;
-    beepU.play();
+    beepU.currentTime = 0
+    beepU.play()
   } catch (_) {}
 
   // Reset SVG arc offset
   gsap.set(progressCircle.value, {
     strokeDashoffset: CIRCUMFERENCE,
-  });
+  })
 
   // Start GSAP animation
   gsapTween = gsap.to(anim, {
     progress: 1,
     duration,
-    ease: "none",
+    ease: 'none',
     onUpdate: () => {
       // Update SVG stroke offset
-      const offset = CIRCUMFERENCE * (1 - anim.progress);
-      gsap.set(progressCircle.value, { strokeDashoffset: offset });
+      const offset = CIRCUMFERENCE * (1 - anim.progress)
+      gsap.set(progressCircle.value, { strokeDashoffset: offset })
 
       // Compute remaining seconds
-      const newRemaining = Math.ceil(duration * (1 - anim.progress));
-      state.remaining = newRemaining;
+      const newRemaining = Math.ceil(duration * (1 - anim.progress))
+      state.remaining = newRemaining
 
       // Play beep only when value changes and in last 3 seconds
-      if (
-        state.lastRemaining !== newRemaining &&
-        newRemaining <= 3 &&
-        newRemaining > 0
-      ) {
+      if (state.lastRemaining !== newRemaining && newRemaining <= 3 && newRemaining > 0) {
         try {
-          beepD.currentTime = 0;
-          beepD.play();
+          beepD.currentTime = 0
+          beepD.play()
         } catch (_) {}
       }
 
-      state.lastRemaining = newRemaining;
+      state.lastRemaining = newRemaining
     },
     onComplete: onDone,
-  });
+  })
 }
 
 // Restart timer when duration prop changes
 watch(
   () => props.duration,
-  (value) => {
-    if (value) runTimer(value, () => emit("finished"));
-  },
-);
+  value => {
+    if (value) runTimer(value, () => emit('finished'))
+  }
+)
 
 // Pause / resume animation
 watch(
   () => props.isPaused,
-  (paused) => {
-    if (!gsapTween) return;
-    paused ? gsapTween.pause() : gsapTween.resume();
-  },
-);
+  paused => {
+    if (!gsapTween) return
+    paused ? gsapTween.pause() : gsapTween.resume()
+  }
+)
 
 // Cleanup on destroy
-onUnmounted(() => gsapTween?.kill());
+onUnmounted(() => gsapTween?.kill())
 </script>
 
 <style scoped>
