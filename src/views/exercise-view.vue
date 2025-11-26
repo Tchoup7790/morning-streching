@@ -18,6 +18,7 @@
     <CustomTimer
       :key="store.currentExercise.id"
       :duration="store.currentExercise.duration"
+      :waiting-time="store.waitingTime"
       image="/exercises/test.jpg"
       :instructions="store.currentExercise.instructions"
       @finished="onExerciseFinished"

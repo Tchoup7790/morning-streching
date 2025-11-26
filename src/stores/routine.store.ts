@@ -9,6 +9,8 @@ export interface RoutineState {
   currentIndex: number
   // Indicates if the routine is paused
   isPaused: boolean
+  // Time between exercises
+  waitingTime: number
 }
 
 export const useRoutineStore = defineStore('routine', {
@@ -20,6 +22,8 @@ export const useRoutineStore = defineStore('routine', {
       currentIndex: 0,
       // Routine starts unpaused
       isPaused: false,
+      // Default waiting at 10s
+      waitingTime: 10,
     }) as RoutineState,
 
   getters: {
