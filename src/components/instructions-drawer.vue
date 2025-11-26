@@ -33,47 +33,49 @@
 </template>
 
 <script setup lang="ts">
-import { type ComponentPublicInstance, nextTick, ref, watch } from 'vue'
-import { useSlideAnimation } from '@/composables/use-slide-animation'
-import { useStaggerAnimation } from '@/composables/use-stagger-animation'
+import { type ComponentPublicInstance, nextTick, ref, watch } from "vue";
+import { useSlideAnimation } from "@/composables/use-slide-animation";
+import { useStaggerAnimation } from "@/composables/use-stagger-animation";
 
 // Props
 const props = defineProps<{
-  modelValue: boolean
-  instructions: string[]
-}>()
+  modelValue: boolean;
+  instructions: string[];
+}>();
 
 // Emits
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(["update:modelValue"]);
 
 // Drawer ref
-const drawer = ref<Element | null>(null)
+const drawer = ref<Element | null>(null);
 
 // Timeline refs (Element, pas HTMLElement)
-const timelineItems = ref<(Element | ComponentPublicInstance | null)[]>([])
+const timelineItems = ref<(Element | ComponentPublicInstance | null)[]>([]);
 
 // Close with exit animation
 function close() {
   if (!drawer.value) {
-    emit('update:modelValue', false)
-    return
+    emit("update:modelValue", false);
+    return;
   }
 
-  useSlideAnimation(drawer.value, false, () => emit('update:modelValue', false))
+  useSlideAnimation(drawer.value, false, () =>
+    emit("update:modelValue", false),
+  );
 }
 
 // Animate when opening
 watch(
   () => props.modelValue,
-  async isOpen => {
-    if (!isOpen) return
-    await nextTick()
+  async (isOpen) => {
+    if (!isOpen) return;
+    await nextTick();
 
-    if (drawer.value) useSlideAnimation(drawer.value, true)
+    if (drawer.value) useSlideAnimation(drawer.value, true);
 
-    useStaggerAnimation('.drawer-header > *, .timeline > *', 0.1)
-  }
-)
+    useStaggerAnimation(".drawer-header > *, .timeline > *", 0.1);
+  },
+);
 </script>
 
 <style scoped>
@@ -90,11 +92,14 @@ watch(
 .drawer {
   width: 100%;
 
-  border-top: 1px solid color-mix(in srgb, var(--color-primary) 25%, transparent);
-  border-left: 1px solid color-mix(in srgb, var(--color-primary) 25%, transparent);
-  border-right: 1px solid color-mix(in srgb, var(--color-primary) 25%, transparent);
+  border-top: 1px solid
+    color-mix(in srgb, var(--color-primary) 25%, transparent);
+  border-left: 1px solid
+    color-mix(in srgb, var(--color-primary) 25%, transparent);
+  border-right: 1px solid
+    color-mix(in srgb, var(--color-primary) 25%, transparent);
   border-radius: var(--radius) var(--radius) 0 0;
-  background: var(--rp-surface);
+  background: var(--rp-base);
 
   padding: 0 var(--radius);
   padding-bottom: 7vh;
