@@ -1,8 +1,9 @@
 import { gsap } from 'gsap'
 
-/* Slide animation composable
-   - isIn = true  → element slides in (from +y to 0) and fades in
-   - isIn = false → element slides out (to +y) and fades out
+/* 
+Slide animation composable
+- isIn = true  → element slides in (from +y to 0) and fades in
+- isIn = false → element slides out (to +y) and fades out
 */
 export function useSlideAnimation(
   element: Element,
