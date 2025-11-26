@@ -1,9 +1,8 @@
 <template>
-  <main>
+  <main class="intro-view">
     <div>
       <!-- Page title -->
       <h1>Routine Matinale</h1>
-
       <!-- Short description -->
       <p>Commencez votre journée en souplesse.</p>
     </div>
@@ -14,23 +13,25 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useStaggerAnimation } from '@/composables/use-stagger-animation'
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useStagger } from "@/composables/use-stagger";
 
 // Router instance used for navigation
-const router = useRouter()
+const router = useRouter();
 
 // Navigate to the routine page when the button is clicked
 function startRoutine() {
-  router.push('/routine')
+  router.push("/routine");
 }
 
 // Animate titles and button with a staggered entrance
-onMounted(() => useStaggerAnimation('main > div > *, main > button'))
+onMounted(() => {
+  useStagger(".intro-view > div > *, .intro-view > button");
+});
 </script>
 
-<style scoped>
+<style lang="css" scoped>
 main {
   height: 100%;
   justify-content: space-around;
