@@ -106,6 +106,9 @@ button:active {
 
 /* Anchor */
 a {
+  display: inline-flex;
+  position: relative;
+
   text-decoration: underline;
   text-underline-offset: 2px;
 
@@ -121,7 +124,7 @@ a {
 a:active {
   transition: color var(--transition);
 
-  color: var(--color-primary);
+  color: var(--color-text);
 }
 
 /* Animates opacity and movement during enter/leave */

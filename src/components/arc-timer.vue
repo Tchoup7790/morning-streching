@@ -133,7 +133,7 @@ watch(
 );
 
 /* Stagger animation on enter */
-onMounted(() => useStaggerAnimation("div > h3, div > a,  image"));
+onMounted(() => useStaggerAnimation("h3, div >  a", 1.6));
 
 /* Clean animation on component unmount */
 onUnmounted(() => controls?.kill());

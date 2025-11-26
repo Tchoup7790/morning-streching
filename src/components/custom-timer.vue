@@ -94,7 +94,7 @@ onMounted(() => {
 
   // Stagger animation on status text and control buttons
   useStaggerAnimation(
-    "div > .timer-status, div > .timer-handler > *",
+    "div > .timer-status,div > :nth-child(1), div > .timer-handler > *",
     0.9,
     0.5,
   );
