@@ -1,42 +1,35 @@
 <template>
   <main>
-    <!-- Header with title and subtitle -->
     <div>
+      <!-- Page title -->
       <h1>Routine Matinale</h1>
+
+      <!-- Short description -->
       <p>Commencez votre journée en souplesse.</p>
     </div>
 
-    <!-- Button to start the routine -->
+    <!-- Button that starts the routine -->
     <button @click="startRoutine">Commencer la séance</button>
   </main>
 </template>
 
 <script setup lang="ts">
-// Router instance for navigation
 import { useRouter } from "vue-router";
-import { onMounted } from "vue";
-import { gsap } from "gsap";
+import { useStaggerAnimation } from "@/composables/use-stagger-animation";
 
+// Router instance used for navigation
 const router = useRouter();
 
-// Navigate to the routine page when clicked
+// Navigate to the routine page when the button is clicked
 function startRoutine() {
   router.push("/routine");
 }
 
-onMounted(() => {
-  gsap.from("main > *", {
-    y: 20,
-    duration: 1,
-    stagger: 0.12,
-    ease: "expo.out",
-    delay: 0.1,
-  });
-});
+// Animate titles and button with a staggered entrance
+useStaggerAnimation("main > div > *, main > button");
 </script>
 
 <style scoped>
-/* Ensures spacing inside the main container */
 main {
   height: 100%;
   justify-content: space-around;
