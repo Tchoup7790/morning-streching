@@ -1,10 +1,12 @@
 <template>
   <div>
+    <!-- SVG wrapper for the circular timer -->
     <svg
       :width="ArcConstants.SIZE"
       :height="ArcConstants.SIZE"
       class="timer-svg"
     >
+      <!-- Static background ring -->
       <circle
         :cx="ArcConstants.CENTER"
         :cy="ArcConstants.CENTER"
@@ -14,6 +16,7 @@
         class="timer-bg"
       />
 
+      <!-- Animated foreground ring driven by GSAP -->
       <circle
         ref="progressCircle"
         :cx="ArcConstants.CENTER"
@@ -29,69 +32,89 @@
       />
     </svg>
 
+    <!-- Image placed in the center of the arc -->
     <div class="image-wrapper">
       <img :src="props.image" alt="exercice-image" class="exercise-image" />
     </div>
 
+    <!-- Live countdown value -->
     <h3 class="timer-value">{{ state.remaining }}s</h3>
 
+    <!-- Opens the instruction drawer -->
     <a href="#" @click.prevent="emit('openDrawer')">Instructions</a>
   </div>
 </template>
 
 <script setup lang="ts">
+/* Vue reactivity + lifecycle */
 import { onMounted, onUnmounted, reactive, ref, watch } from "vue";
+
+/* Arc animation engine */
 import {
   type ArcAnimationControls,
   ArcConstants,
   createArcTimerAnimation,
-} from "@/composables/use-arc-animation";
+} from "@/composables/create-arc-timer-animation";
+
+/* Entry fade/stagger animation */
 import { useStaggerAnimation } from "@/composables/use-stagger-animation";
 
+/* Props passed by parent */
 const props = defineProps({
   duration: { type: Number, required: true },
   image: { type: String, required: true },
   isPaused: { type: Boolean, required: true },
 });
 
+/* Ref to the SVG animated arc */
 const progressCircle = ref<SVGCircleElement | null>(null);
 
+/* Local reactive state */
 interface CustomTimerState {
-  remaining: number;
+  remaining: number; // current countdown value
 }
 
 const state: CustomTimerState = reactive({
   remaining: 0,
 });
 
+/* Emitted events to the parent */
 const emit = defineEmits<{
   (e: "openDrawer"): void;
   (e: "finished"): void;
 }>();
 
+/* Stores GSAP animation controls */
 let controls: ArcAnimationControls | null = null;
 
+/* Starts/restarts the arc animation */
 function runTimer() {
   if (!progressCircle.value) return;
 
+  // Kill previous animation
   controls?.kill();
 
+  // Reset countdown state
   state.remaining = props.duration;
 
+  // Create new animation
   controls = createArcTimerAnimation(
     progressCircle.value,
     props.duration,
-    () => emit("finished"),
+    () => emit("finished"), // callback when timer ends
     (newRemaining) => {
+      // update UI on each tick
       state.remaining = newRemaining;
     },
   );
 
+  // Respect pause state on mount
   if (props.isPaused) {
     controls.pause();
   }
 }
 
+/* Restart timer when duration changes */
 watch(
   () => props.duration,
   (value) => {
@@ -100,6 +123,7 @@ watch(
   { immediate: true },
 );
 
+/* Pause/resume animation based on parent state */
 watch(
   () => props.isPaused,
   (paused) => {
@@ -108,8 +132,10 @@ watch(
   },
 );
 
+/* Stagger animation on enter */
 onMounted(() => useStaggerAnimation("div > h3, div > a,  image"));
 
+/* Clean animation on component unmount */
 onUnmounted(() => controls?.kill());
 </script>
 

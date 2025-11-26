@@ -1,26 +1,25 @@
-// morning-streching/src/composables/createArcTimerAnimation.ts
-
 import { gsap } from 'gsap'
 
-// Constantes géométriques
+/* Base constants for the circular timer geometry */
 const SIZE = 250
 const STROKE = 10
 const RADIUS = (SIZE - STROKE) / 2
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
-// Bips sonores (définis une seule fois)
+/* Preloaded audio cues */
 const beepD = new Audio('/sounds/beep-down.mp3')
 beepD.preload = 'auto'
 const beepU = new Audio('/sounds/beep-up.mp3')
 beepU.preload = 'auto'
 
+/* Controls returned by the GSAP animation */
 export interface ArcAnimationControls {
   pause: () => void
   resume: () => void
   kill: () => void
 }
 
-// Utilitaires (nécessaires pour le template ArcTimer.vue)
+/* Exported geometry constants for external components */
 export const ArcConstants = {
   SIZE,
   STROKE,
@@ -30,65 +29,66 @@ export const ArcConstants = {
 }
 
 /**
- * Crée et lance l'animation GSAP pour l'arc de progression.
- * C'est une utilitaire purement JS/GSAP, sans dépendance à Vue reactivity.
- *
- * @param progressCircle L'élément SVG circle.
- * @param duration La durée totale de l'animation en secondes.
- * @param onDone Callback lorsque le timer est complet.
- * @param onTimeUpdate Callback à chaque mise à jour du temps pour l'affichage.
- * @returns Les contrôles pour manipuler l'animation.
+ * Creates and runs a circular timer animation using GSAP.
+ * Handles: arc animation, timing updates, sound cues.
  */
 export function createArcTimerAnimation(
-  progressCircle: SVGCircleElement,
-  duration: number,
-  onDone: () => void,
-  onTimeUpdate: (newRemaining: number) => void
+  progressCircle: SVGCircleElement, // target SVG arc
+  duration: number, // total duration in seconds
+  onDone: () => void, // callback when timer completes
+  onTimeUpdate: (newRemaining: number) => void // callback for UI updates
 ): ArcAnimationControls {
   let gsapTween: gsap.core.Tween | null = null
   let lastRemaining = duration
 
+  // Internal progress driver for GSAP
   const anim = { progress: 0 }
 
-  // Initialisation des sons et de l'arc
+  /* Play start sound */
   try {
     beepU.currentTime = 0
     beepU.play()
-  } catch (_) {}
+  } catch (_) { }
 
+  /* Reset arc to full circumference */
   gsap.set(progressCircle, {
     strokeDashoffset: CIRCUMFERENCE,
   })
 
-  // Création de l'animation GSAP
+  /* Start arc animation */
   gsapTween = gsap.to(anim, {
     progress: 1,
     duration,
     ease: 'none',
+
+    /* Called on every frame while animating */
     onUpdate: () => {
-      // 1. Mise à jour de l'offset de l'arc
+      // Move arc position
       const offset = CIRCUMFERENCE * (1 - anim.progress)
       gsap.set(progressCircle, { strokeDashoffset: offset })
 
-      // 2. Calcul du temps restant
+      // Compute remaining time
       const newRemaining = Math.ceil(duration * (1 - anim.progress))
 
-      // 3. Logique des bips de fin
+      // Play countdown beeps (3 → 1)
       if (lastRemaining !== newRemaining && newRemaining <= 3 && newRemaining > 0) {
         try {
           beepD.currentTime = 0
           beepD.play()
-        } catch (_) {}
+        } catch (_) { }
       }
 
-      // 4. Notification au composant
+      // Push update to parent
       onTimeUpdate(newRemaining)
+
       lastRemaining = newRemaining
     },
+
+    /* Called once animation reaches the end */
     onComplete: onDone,
   })
 
-  // Retour des contrôles
+  /* Expose animation controls to caller */
   return {
     pause: () => gsapTween?.pause(),
     resume: () => gsapTween?.resume(),
