@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <!-- SVG wrapper for the circular timer -->
+  <!-- SVG wrapper for the circular timer -->
+  <div class="arc-timer">
     <svg
       :width="ArcConstants.SIZE"
       :height="ArcConstants.SIZE"
@@ -23,18 +23,16 @@
         :cy="ArcConstants.CENTER"
         :r="ArcConstants.RADIUS"
         :stroke-width="ArcConstants.STROKE"
-        fill="none"
         stroke-linecap="round"
         :stroke-dasharray="ArcConstants.CIRCUMFERENCE"
         :stroke-dashoffset="ArcConstants.CIRCUMFERENCE"
-        style="transform: rotate(-90deg); transform-origin: 50% 50%"
         class="timer-progress"
       />
     </svg>
 
     <!-- Image placed in the center of the arc -->
     <div class="image-wrapper">
-      <img :src="props.image" alt="exercice-image" class="exercise-image" />
+      <img :src="props.image" alt="" class="exercise-image" />
     </div>
 
     <!-- Live countdown value -->
@@ -46,100 +44,82 @@
 </template>
 
 <script setup lang="ts">
-/* Vue reactivity + lifecycle */
-import { onMounted, onUnmounted, reactive, ref, watch } from "vue";
-
-/* Arc animation engine */
+import { nextTick, onMounted, onUnmounted, reactive, ref, watch } from "vue";
 import {
-  type ArcAnimationControls,
   ArcConstants,
-  createArcTimerAnimation,
-} from "@/composables/create-arc-timer-animation";
+  type ArcTimerControls,
+  useArcTimer,
+} from "@/composables/use-arc-timer";
+import { useStagger } from "@/composables/use-stagger";
 
-/* Entry fade/stagger animation */
-import { useStaggerAnimation } from "@/composables/use-stagger-animation";
-
-/* Props passed by parent */
+// Props passed by parent
 const props = defineProps({
   duration: { type: Number, required: true },
   image: { type: String, required: true },
   isPaused: { type: Boolean, required: true },
 });
 
-/* Ref to the SVG animated arc */
+// Ref to the SVG animated arc
 const progressCircle = ref<SVGCircleElement | null>(null);
 
-/* Local reactive state */
+// Local reactive state
 interface CustomTimerState {
-  remaining: number; // current countdown value
+  remaining: number;
 }
 
 const state: CustomTimerState = reactive({
   remaining: 0,
 });
 
-/* Emitted events to the parent */
+// Emitted events to the parent
 const emit = defineEmits<{
   (e: "openDrawer"): void;
   (e: "finished"): void;
 }>();
 
-/* Stores GSAP animation controls */
-let controls: ArcAnimationControls | null = null;
+// Stores GSAP animation controls
+let controls: ArcTimerControls | null = null;
 
-/* Starts/restarts the arc animation */
-function runTimer() {
+// Starts/restarts the arc animation
+async function startTimer() {
+  await nextTick();
+
   if (!progressCircle.value) return;
 
   // Kill previous animation
   controls?.kill();
-
   // Reset countdown state
   state.remaining = props.duration;
 
   // Create new animation
-  controls = createArcTimerAnimation(
+  controls = useArcTimer(
     progressCircle.value,
     props.duration,
-    () => emit("finished"), // callback when timer ends
-    (newRemaining) => {
-      // update UI on each tick
-      state.remaining = newRemaining;
+    () => emit("finished"),
+    (r) => {
+      state.remaining = r;
     },
   );
 
   // Respect pause state on mount
-  if (props.isPaused) {
-    controls.pause();
-  }
+  if (props.isPaused) controls.pause();
 }
 
-/* Restart timer when duration changes */
-watch(
-  () => props.duration,
-  (value) => {
-    if (value) runTimer();
-  },
-  { immediate: true },
-);
+watch(() => props.duration, startTimer, { immediate: true });
 
-/* Pause/resume animation based on parent state */
 watch(
   () => props.isPaused,
-  (paused) => {
-    if (!controls) return;
-    paused ? controls.pause() : controls.resume();
-  },
+  (v) => (v ? controls?.pause() : controls?.resume()),
 );
 
-/* Stagger animation on enter */
-onMounted(() => useStaggerAnimation("h3, div >  a", 1.6));
+onMounted(() => {
+  useStagger(".arc-timer .timer-value, .arc-timer a", 0.3);
+});
 
-/* Clean animation on component unmount */
 onUnmounted(() => controls?.kill());
 </script>
 
-<style scoped>
+<style lang="css" scoped>
 .timer-svg {
   display: block;
   padding: 20px 0;

@@ -1,7 +1,6 @@
 <template>
-  <!-- Main wrapper for the timer + controls -->
-  <div class="container">
-    <!-- Circular animated timer -->
+  <!-- Circular animated timer -->
+  <div class="custom-timer">
     <ArcTimer
       :duration="state.duration"
       :is-paused="state.isPaused"
@@ -38,7 +37,7 @@
 
 <script setup lang="ts">
 import { onMounted, type PropType, reactive } from "vue";
-import { useStaggerAnimation } from "@/composables/use-stagger-animation";
+import { useStagger } from "@/composables/use-stagger";
 import ArcTimer from "./arc-timer.vue";
 import InstructionsDrawer from "./instructions-drawer.vue";
 
@@ -90,17 +89,17 @@ function openDrawer() {
 
 // Initialize timer and apply entrance animations
 onMounted(() => {
-  if (props.waitingTime > 0) state.duration = props.waitingTime;
+  state.duration = props.waitingTime ?? 0;
 
   // Stagger animation on status text and control buttons
-  useStaggerAnimation(
-    "div > .timer-status,div > :nth-child(1), div > .timer-handler > *",
-    0.9,
-    0.5,
+  useStagger(
+    ".custom-timer .timer-status, .custom-timer .timer-handler > *",
+    0.2,
   );
 });
 </script>
-<style scoped>
+
+<style lang="css" scoped>
 .container {
   position: relative;
   display: flex;
