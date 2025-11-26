@@ -7,7 +7,7 @@
 
       <!-- Completion message -->
       <p>Vous avez terminé.</p>
-      <br>
+      <br />
       <p>La journée peut maintenant commencer :)</p>
     </div>
 
@@ -17,36 +17,36 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { useConfettiAnimation } from '@/composables/use-confetti-animation'
-import { useStaggerAnimation } from '@/composables/use-stagger-animation'
-import { useRoutineStore } from '@/stores/routine.store'
+import { onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useConfettiAnimation } from "@/composables/use-confetti-animation";
+import { useStaggerAnimation } from "@/composables/use-stagger-animation";
+import { useRoutineStore } from "@/stores/routine.store";
 
-const router = useRouter()
-const store = useRoutineStore()
+const router = useRouter();
+const store = useRoutineStore();
 
 /**
  * Navigate back home and reset routine state.
  */
 function goHome() {
-  store.reset() // Clear routine progress
-  router.push({ name: 'home' }) // Redirect to home page
+  store.reset(); // Clear routine progress
+  router.push({ name: "home" }); // Redirect to home page
 }
 
 // Trigger animations when the component is mounted
 onMounted(() => {
   // Animate text elements sequentially
-  useStaggerAnimation('main > div > *, main > button', 0.5)
+  useStaggerAnimation("main > div > *, main > button", 0.5);
 
   // First confetti burst
-  useConfettiAnimation()
+  useConfettiAnimation();
 
   // Slightly delayed second burst for extra effect
   setTimeout(() => {
-    useConfettiAnimation(80, 60)
-  }, 100)
-})
+    useConfettiAnimation(80, 60);
+  }, 100);
+});
 </script>
 
 <style lang="css" scoped>
