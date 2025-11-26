@@ -50,7 +50,12 @@ const store = useRoutineStore();
 
 // Handles what happens when the timer finishes
 function onExerciseFinished() {
-  store.hasNext ? store.next() : router.push({ name: "end" });
+  if (store.hasNext) {
+    store.next();
+    useStaggerAnimation("main > :nth-child(-n+3), main > a");
+  } else {
+    router.push({ name: "end" });
+  }
 }
 
 // Play a staggered animation on initial render
