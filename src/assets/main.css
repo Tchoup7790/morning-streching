@@ -56,7 +56,7 @@ body {
   max-width: 500px;
   min-height: 100%;
 
-  padding: 20px;
+  padding: 0;
   box-sizing: border-box;
 
   display: flex;
@@ -73,6 +73,8 @@ main {
   width: 100%;
   flex-grow: 1;
   box-sizing: border-box;
+
+  padding: 8px 32px;
 }
 
 /* Button */
@@ -88,20 +90,9 @@ button {
 
   border-radius: var(--radius);
 
-  cursor: pointer;
   display: inline-flex;
   justify-content: center;
   align-items: center;
-}
-
-/* Button:Pressed */
-button:active {
-  transition:
-    background var(--transition),
-    border-color var(--transition);
-
-  background: color-mix(in srgb, var(--color-primary) 30%, transparent);
-  border-color: var(--color-primary);
 }
 
 /* Anchor */
@@ -117,39 +108,4 @@ a {
 
   color: var(--rp-subtle);
   text-transform: lowercase;
-  cursor: pointer;
-}
-
-/* Anchor:Active */
-a:active {
-  transition: color var(--transition);
-
-  color: var(--color-text);
-}
-
-/* Animates opacity and movement during enter/leave */
-.view-enter-active,
-.view-leave-active {
-  transition:
-    opacity 0.4s ease,
-    transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-/* Initial state of the view when entering */
-.view-enter-from {
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-/* Final state of the view when leaving */
-.view-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-
-/* Keeps the leaving view from shifting layout during transition */
-.view-leave-active {
-  position: absolute;
-  width: calc(100% - 40px);
-  max-width: 460px;
 }
