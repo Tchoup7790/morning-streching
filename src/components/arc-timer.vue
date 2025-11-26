@@ -142,6 +142,8 @@ onUnmounted(() => controls?.kill());
 .timer-progress {
   stroke: var(--color-primary);
   fill: transparent;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
   transition: stroke-dashoffset 0.25s linear;
 }
 
