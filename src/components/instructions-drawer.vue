@@ -33,8 +33,9 @@
 </template>
 
 <script setup lang="ts">
-import { gsap } from "gsap";
 import { type ComponentPublicInstance, nextTick, ref, watch } from "vue";
+import { useSlideAnimation } from "@/composables/use-slide-animation";
+import { useStaggerAnimation } from "@/composables/use-stagger-animation";
 
 // Props
 const props = defineProps<{
@@ -58,13 +59,9 @@ function close() {
     return;
   }
 
-  gsap.to(drawer.value, {
-    y: 50,
-    opacity: 0,
-    duration: 0.25,
-    ease: "power2.in",
-    onComplete: () => emit("update:modelValue", false),
-  });
+  useSlideAnimation(drawer.value, false, () =>
+    emit("update:modelValue", false),
+  );
 }
 
 // Animate when opening
@@ -72,41 +69,16 @@ watch(
   () => props.modelValue,
   async (isOpen) => {
     if (!isOpen) return;
-
     await nextTick();
 
-    if (drawer.value) {
-      gsap.fromTo(
-        drawer.value,
-        { y: 80, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.35, ease: "power3.out" },
-      );
-    }
+    if (drawer.value) useSlideAnimation(drawer.value, true);
 
-    const elements = timelineItems.value
-      .filter((el): el is Element => el !== null)
-      .map((el) => el as HTMLElement);
-
-    if (elements.length) {
-      gsap.fromTo(
-        elements,
-        { y: 20, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.3,
-          ease: "power2.out",
-          stagger: 0.06,
-          delay: 0.05,
-        },
-      );
-    }
+    useStaggerAnimation(".drawer-header > *, .timeline > *");
   },
 );
 </script>
 
 <style scoped>
-/* Fullscreen dark overlay */
 .overlay {
   position: fixed;
   inset: 0;
@@ -117,7 +89,6 @@ watch(
   z-index: 9999;
 }
 
-/* Bottom sheet container */
 .drawer {
   width: 100%;
 
@@ -131,21 +102,18 @@ watch(
   background: var(--rp-surface);
 
   padding: 0 var(--radius);
-  padding-bottom: 20vh;
+  padding-bottom: 5vh;
 
   height: fit-content;
   max-height: 60vh;
-
-  /* Needed for GSAP initial state */
-  transform: translateY(0);
 }
 
-/* Header */
 .drawer-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding-bottom: var(--radius);
+  font-size: 14px;
 }
 
 .close-btn {
@@ -161,34 +129,23 @@ watch(
   color: var(--rp-text);
 }
 
-/* Timeline container */
 .timeline {
   display: flex;
   flex-direction: column;
+  color: var(--rp-subtle);
   gap: 26px;
 }
 
-/* Timeline item */
 .timeline-item {
   display: flex;
   align-items: flex-start;
-  gap: 16px;
+  gap: 12px;
   position: relative;
 }
 
-/* Old-style dot */
-.timeline-item span {
-  font-size: 18px;
-  color: var(--color-primary);
-  opacity: 0.85;
-}
-
-/* Text */
 .timeline p {
-  color: var(--rp-subtle);
   margin: 0;
-  font-size: 14px;
-  line-height: 1.45;
+  font-size: 12px;
   text-align: justify;
 }
 </style>
