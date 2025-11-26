@@ -14,6 +14,7 @@
 </template>
 
 <script setup lang="ts">
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useStaggerAnimation } from "@/composables/use-stagger-animation";
 
@@ -26,7 +27,7 @@ function startRoutine() {
 }
 
 // Animate titles and button with a staggered entrance
-useStaggerAnimation("main > div > *, main > button");
+onMounted(() => useStaggerAnimation("main > div > *, main > button"));
 </script>
 
 <style scoped>

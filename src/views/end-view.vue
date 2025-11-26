@@ -23,17 +23,6 @@ import { useConfettiAnimation } from "@/composables/use-confetti-animation";
 import { useStaggerAnimation } from "@/composables/use-stagger-animation";
 import { useRoutineStore } from "@/stores/routine.store";
 
-// Trigger animations when the component is mounted
-onMounted(() => {
-  // First confetti burst
-  useConfettiAnimation();
-
-  // Slightly delayed second burst for extra effect
-  setTimeout(() => {
-    useConfettiAnimation(80, 60);
-  }, 100);
-});
-
 const router = useRouter();
 const store = useRoutineStore();
 
@@ -45,8 +34,19 @@ function goHome() {
   router.push({ name: "home" }); // Redirect to home page
 }
 
-// Animate text elements sequentially
-useStaggerAnimation("main > div > *", 0.5);
+// Trigger animations when the component is mounted
+onMounted(() => {
+  // Animate text elements sequentially
+  useStaggerAnimation("main > div > *, main > button", 0.5);
+
+  // First confetti burst
+  useConfettiAnimation();
+
+  // Slightly delayed second burst for extra effect
+  setTimeout(() => {
+    useConfettiAnimation(80, 60);
+  }, 100);
+});
 </script>
 
 <style lang="css" scoped>
