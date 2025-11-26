@@ -100,7 +100,7 @@ onMounted(() => {
 </script>
 
 <style lang="css" scoped>
-.container {
+.custom-timer {
   position: relative;
   display: flex;
   flex-direction: column;
@@ -114,7 +114,6 @@ onMounted(() => {
 
 .timer-status {
   color: var(--rp-subtle);
-  margin: 0;
 }
 
 .timer-handler {

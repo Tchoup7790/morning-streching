@@ -14,7 +14,6 @@
   --rp-pine: #31748f;
   --rp-foam: #9ccfd8;
   --rp-iris: #c4a7e7;
-
   --radius: 14px;
   --transition: 0.25s ease;
 
@@ -93,19 +92,4 @@ button {
   display: inline-flex;
   justify-content: center;
   align-items: center;
-}
-
-/* Anchor */
-a {
-  display: inline-flex;
-  position: relative;
-
-  text-decoration: underline;
-  text-underline-offset: 2px;
-
-  font-size: 0.85rem;
-  font-family: inherit;
-
-  color: var(--rp-subtle);
-  text-transform: lowercase;
 }

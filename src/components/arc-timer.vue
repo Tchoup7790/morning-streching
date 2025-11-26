@@ -30,16 +30,23 @@
       />
     </svg>
 
-    <!-- Image placed in the center of the arc -->
-    <div class="image-wrapper">
-      <img :src="props.image" alt="" class="exercise-image" />
+    <div class="inner-circle">
+      <!-- Image placed in the center of the arc -->
+      <div class="image-wrapper">
+        <img :src="props.image" alt="" class="exercise-image" />
+
+        <!-- Opens the instruction drawer -->
+      </div>
+      <a
+        class="exercise-instructions"
+        href="#"
+        @click.prevent="emit('openDrawer')"
+        >i</a
+      >
     </div>
 
     <!-- Live countdown value -->
     <h3 class="timer-value">{{ state.remaining }}s</h3>
-
-    <!-- Opens the instruction drawer -->
-    <a href="#" @click.prevent="emit('openDrawer')">Instructions</a>
   </div>
 </template>
 
@@ -113,7 +120,9 @@ watch(
 );
 
 onMounted(() => {
-  useStagger(".arc-timer .timer-value, .arc-timer a", 0.3);
+  useStagger(
+    ".inner-circle .exercise-image, .inner-circle .exercise-instructions, .arc-timer .timer-value, .timer-svg .timer-bg",
+  );
 });
 
 onUnmounted(() => controls?.kill());
@@ -123,10 +132,7 @@ onUnmounted(() => controls?.kill());
 .timer-svg {
   display: block;
   padding: 20px 0;
-}
-
-.timer-value {
-  margin: 0;
+  overflow: visible;
 }
 
 .timer-bg {
@@ -135,29 +141,48 @@ onUnmounted(() => controls?.kill());
 
 .timer-progress {
   stroke: var(--color-primary);
+  fill: transparent;
   transition: stroke-dashoffset 0.25s linear;
 }
 
 .image-wrapper {
-  position: absolute;
-  top: 60px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 160px;
-  height: 160px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 3px solid var(--color-primary);
-  background: var(--rp-surface);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 10;
 }
 
+.inner-circle {
+  position: absolute;
+  display: flex;
+  height: 210px;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+  top: 35px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 .exercise-image {
-  width: 100%;
-  height: 100%;
+  position: relative;
   object-fit: cover;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+}
+
+.exercise-instructions {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 18px;
+  height: 18px;
+  font-size: 10px;
+  text-decoration: none;
+  border: solid 1.2px var(--rp-subtle);
+  border-radius: 100%;
+  color: var(--rp-subtle);
 }
 </style>

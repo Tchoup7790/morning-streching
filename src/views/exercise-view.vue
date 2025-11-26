@@ -73,6 +73,7 @@ onMounted(() => {
   background: var(--rp-overlay);
   border-radius: 999px;
   overflow: hidden;
+  margin: 14px 0;
 }
 
 .progress-bar {
