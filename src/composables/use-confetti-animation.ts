@@ -1,14 +1,20 @@
 import confetti from 'canvas-confetti'
 
-// Launches a customizable confetti burst.
-export function useConfettiAnimation(spread: number = 180, velocity: number = 45) {
-  // Fire confetti burst with preset visual parameters
+// Fires a confetti burst with customizable parameters.
+export function useConfetti({
+  count = 120,
+  spread = 180,
+  velocity = 45,
+  gravity = 0.7,
+  scalar = 1,
+} = {}) {
   confetti({
-    particleCount: 120, // Number of particles
-    spread: spread, // Horizontal scattering angle
-    origin: { y: 1.1 }, // Start slightly below the viewport
-    startVelocity: velocity, // Initial launch velocity
-    gravity: 0.7, // Downward pull for realism
-    scalar: 1, // Particle size scaling
+    particleCount: count,
+    spread,
+    startVelocity: velocity,
+    origin: { y: 1.1 },
+    gravity,
+    scalar,
   })
 }
+

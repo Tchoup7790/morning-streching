@@ -1,10 +1,9 @@
 <template>
-  <main>
-    <!-- Completion message wrapper -->
+  <!-- Completion message wrapper -->
+  <main class="end-view">
     <div>
       <!-- Success title -->
       <h2>Félicitations !</h2>
-
       <!-- Completion message -->
       <p>Vous avez terminé.</p>
       <br />
@@ -19,33 +18,31 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useConfettiAnimation } from "@/composables/use-confetti-animation";
-import { useStaggerAnimation } from "@/composables/use-stagger-animation";
+import { useConfetti } from "@/composables/use-confetti-animation";
+import { useStagger } from "@/composables/use-stagger";
 import { useRoutineStore } from "@/stores/routine.store";
 
 const router = useRouter();
 const store = useRoutineStore();
 
-/**
- * Navigate back home and reset routine state.
- */
+// Navigate back home and reset routine state.
 function goHome() {
-  store.reset(); // Clear routine progress
-  router.push({ name: "home" }); // Redirect to home page
+  store.reset();
+  router.push({ name: "home" });
 }
 
 // Trigger animations when the component is mounted
 onMounted(() => {
   // Animate text elements sequentially
-  useStaggerAnimation("main > div > *, main > button", 0.5);
+  useStagger(".end-view > div > *, .end-view > button", 0.4);
 
-  // First confetti burst
-  useConfettiAnimation();
+  // First burst
+  useConfetti();
 
-  // Slightly delayed second burst for extra effect
+  // Second delayed burst
   setTimeout(() => {
-    useConfettiAnimation(80, 60);
-  }, 100);
+    useConfetti({ count: 80, spread: 60 });
+  }, 120);
 });
 </script>
 

@@ -1,7 +1,6 @@
 <template>
-  <!-- Main wrapper – only shown if an exercise exists -->
-  <main v-if="store.currentExercise">
-    <!-- Display current exercise index -->
+  <!-- Display current exercise index -->
+  <main v-if="store.currentExercise" class="exercise-view">
     <p>
       Exercice {{ store.currentIndex + 1 }} sur {{ store.exercises.length }}
     </p>
@@ -18,11 +17,9 @@
     </div>
 
     <!-- Exercise title -->
-    <div>
-      <h2>{{ store.currentExercise.title }}</h2>
-    </div>
+    <h2>{{ store.currentExercise.title }}</h2>
 
-    <!-- Timer for the current exercise (key forces reset on change) -->
+    <!-- Timer -->
     <CustomTimer
       :key="store.currentExercise.id"
       :duration="store.currentExercise.duration"
@@ -39,7 +36,7 @@
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import CustomTimer from "@/components/custom-timer.vue";
-import { useStaggerAnimation } from "@/composables/use-stagger-animation";
+import { useStagger } from "@/composables/use-stagger";
 import { useRoutineStore } from "@/stores/routine.store";
 
 // Router instance
@@ -52,14 +49,21 @@ const store = useRoutineStore();
 function onExerciseFinished() {
   if (store.hasNext) {
     store.next();
-    useStaggerAnimation("main > :nth-child(-n+3), main > a");
+
+    useStagger(
+      ".exercise-view > p, .exercise-view > .progress-bar-container, .exercise-view > h2",
+    );
   } else {
     router.push({ name: "end" });
   }
 }
 
 // Play a staggered animation on initial render
-onMounted(() => useStaggerAnimation("main > :nth-child(-n+3), main > a"));
+onMounted(() => {
+  useStagger(
+    ".exercise-view > p, .exercise-view > .progress-bar-container, .exercise-view > h2",
+  );
+});
 </script>
 
 <style lang="css" scoped>
@@ -69,6 +73,7 @@ onMounted(() => useStaggerAnimation("main > :nth-child(-n+3), main > a"));
   background: var(--rp-overlay);
   border-radius: 999px;
   overflow: hidden;
+  margin: 14px 0;
 }
 
 .progress-bar {

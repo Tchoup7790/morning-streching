@@ -22,7 +22,7 @@
           v-for="(item, index) in instructions"
           :key="index"
           class="timeline-item"
-          :ref="(el) => (timelineItems[index] = el)"
+          ref="setItemRef"
         >
           <span>•</span>
           <p>{{ item }}</p>
@@ -33,50 +33,61 @@
 </template>
 
 <script setup lang="ts">
-import { type ComponentPublicInstance, nextTick, ref, watch } from 'vue'
-import { useSlideAnimation } from '@/composables/use-slide-animation'
-import { useStaggerAnimation } from '@/composables/use-stagger-animation'
+import { nextTick, ref, watch } from "vue";
+import { useSlide } from "@/composables/use-slide";
+import { useStagger } from "@/composables/use-stagger";
 
 // Props
 const props = defineProps<{
-  modelValue: boolean
-  instructions: string[]
-}>()
+  modelValue: boolean;
+  instructions: string[];
+}>();
 
 // Emits
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(["update:modelValue"]);
 
 // Drawer ref
-const drawer = ref<Element | null>(null)
+const drawer = ref<HTMLElement | null>(null);
+const items = ref<HTMLElement[]>([]);
 
-// Timeline refs (Element, pas HTMLElement)
-const timelineItems = ref<(Element | ComponentPublicInstance | null)[]>([])
+// Collect timeline elements in order
+function setItemRef(el: HTMLElement | null) {
+  if (el) items.value.push(el);
+}
 
 // Close with exit animation
 function close() {
   if (!drawer.value) {
-    emit('update:modelValue', false)
-    return
+    emit("update:modelValue", false);
+    return;
   }
 
-  useSlideAnimation(drawer.value, false, () => emit('update:modelValue', false))
+  useSlide(drawer.value, false, {
+    onComplete: () => emit("update:modelValue", false),
+  });
 }
 
 // Animate when opening
 watch(
   () => props.modelValue,
-  async isOpen => {
-    if (!isOpen) return
-    await nextTick()
+  async (isOpen) => {
+    if (!isOpen) {
+      // reset refs for next open
+      items.value = [];
+      return;
+    }
 
-    if (drawer.value) useSlideAnimation(drawer.value, true)
+    await nextTick();
 
-    useStaggerAnimation('.drawer-header > *, .timeline > *', 0.1)
-  }
-)
+    if (drawer.value) useSlide(drawer.value, true);
+
+    // Animate header + each timeline item
+    useStagger(".drawer-header > *, .timeline-item", 0.1);
+  },
+);
 </script>
 
-<style scoped>
+<style lang="css" scoped>
 .overlay {
   position: fixed;
   inset: 0;
@@ -88,13 +99,17 @@ watch(
 }
 
 .drawer {
+  position: relative;
   width: 100%;
 
-  border-top: 1px solid color-mix(in srgb, var(--color-primary) 25%, transparent);
-  border-left: 1px solid color-mix(in srgb, var(--color-primary) 25%, transparent);
-  border-right: 1px solid color-mix(in srgb, var(--color-primary) 25%, transparent);
+  border-top: 1px solid
+    color-mix(in srgb, var(--color-primary) 25%, transparent);
+  border-left: 1px solid
+    color-mix(in srgb, var(--color-primary) 25%, transparent);
+  border-right: 1px solid
+    color-mix(in srgb, var(--color-primary) 25%, transparent);
   border-radius: var(--radius) var(--radius) 0 0;
-  background: var(--rp-surface);
+  background: var(--rp-base);
 
   padding: 0 var(--radius);
   padding-bottom: 7vh;
@@ -116,12 +131,7 @@ watch(
   border: none;
   color: var(--rp-subtle);
   font-size: 22px;
-  cursor: pointer;
   transition: color var(--transition);
-}
-
-.close-btn:hover {
-  color: var(--rp-text);
 }
 
 .timeline {
