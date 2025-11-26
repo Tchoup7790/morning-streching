@@ -1,7 +1,12 @@
 import { gsap } from "gsap";
 
-export function useSlideAnimation(element: Element, isIn: boolean, onComplete?: gsap.Callback, y: number = 250, duration: number = 0.7) {
+/* Slide animation composable
+   - isIn = true  → element slides in (from +y to 0) and fades in
+   - isIn = false → element slides out (to +y) and fades out
+*/
+export function useSlideAnimation(element: Element, isIn: boolean, onComplete?: gsap.Callback, y: number = 250, duration: number = 0.6) {
   if (isIn) {
+    // Play "enter" animation
     gsap.fromTo(
       element,
       { y, opacity: 0 },
@@ -14,6 +19,7 @@ export function useSlideAnimation(element: Element, isIn: boolean, onComplete?: 
       },
     );
   } else {
+    // Play "leave" animation
     gsap.to(element, {
       y,
       opacity: 0,
@@ -23,3 +29,4 @@ export function useSlideAnimation(element: Element, isIn: boolean, onComplete?: 
     });
   }
 }
+

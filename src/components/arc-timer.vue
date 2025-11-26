@@ -166,51 +166,44 @@ onUnmounted(() => gsapTween?.kill());
 </script>
 
 <style scoped>
-/* Ensures the SVG stays centered with consistent spacing */
 .timer-svg {
   display: block;
   padding: 20px 0;
 }
 
-/* Removes default margin from the timer text */
 .timer-value {
   margin: 0;
 }
 
-/* Background ring style (static circle) */
 .timer-bg {
   stroke: var(--rp-overlay);
-  opacity: 0.6;
 }
 
-/* Foreground animated ring */
 .timer-progress {
   stroke: var(--color-primary);
-  transition: stroke-dashoffset 0.25s linear; /* smooth visual fallback */
+  transition: stroke-dashoffset 0.25s linear;
 }
 
-/* Circle wrapper housing the exercise image */
 .image-wrapper {
-  position: absolute; /* floats above the SVG */
-  top: 60px; /* manually centered vertically */
-  left: 50%; /* horizontal centering */
-  transform: translateX(-50%); /* adjust anchor for true center */
+  position: absolute;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
   width: 160px;
   height: 160px;
-  border-radius: 50%; /* perfect circle */
-  overflow: hidden; /* image clipped cleanly inside */
+  border-radius: 50%;
+  overflow: hidden;
   border: 3px solid var(--color-primary);
-  background: var(--rp-surface); /* fallback if image not loaded */
+  background: var(--rp-surface);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10; /* ensures image is above SVG */
+  z-index: 10;
 }
 
-/* Makes the image fill the circle while preserving aspect ratio */
 .exercise-image {
   width: 100%;
   height: 100%;
-  object-fit: cover; /* crops nicely inside circle */
+  object-fit: cover;
 }
 </style>

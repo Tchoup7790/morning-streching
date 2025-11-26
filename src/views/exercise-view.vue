@@ -61,7 +61,6 @@ function onExerciseFinished() {
 </script>
 
 <style lang="css" scoped>
-/* Container that holds the background of the progress bar */
 .progress-bar-container {
   width: 100%;
   height: 7px;
@@ -74,7 +73,6 @@ function onExerciseFinished() {
   overflow: hidden;
 }
 
-/* Foreground progress bar showing how far the user is */
 .progress-bar {
   height: 100%;
   background: var(--color-primary);

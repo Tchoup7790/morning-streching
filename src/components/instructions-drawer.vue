@@ -73,7 +73,7 @@ watch(
 
     if (drawer.value) useSlideAnimation(drawer.value, true);
 
-    useStaggerAnimation(".drawer-header > *, .timeline > *");
+    useStaggerAnimation(".drawer-header > *, .timeline > *", 0.1);
   },
 );
 </script>
@@ -102,7 +102,7 @@ watch(
   background: var(--rp-surface);
 
   padding: 0 var(--radius);
-  padding-bottom: 5vh;
+  padding-bottom: 7vh;
 
   height: fit-content;
   max-height: 60vh;
