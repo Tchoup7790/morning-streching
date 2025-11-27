@@ -1,11 +1,5 @@
 <h1 align="center">morning-streching</h1>
 
-<p align="center">
-  <a href="#description">Description</a> •
-  <a href="#contribution">Contribution</a> •
-  <a href="#about">About</a> 
-</p>
-
 Application web permettant de suivre une routine matinale guidée, composée d’exercices chronométrés, d’instructions interactives et d’une interface fluide animée via GSAP.
 
 Actuellement, ce projet est déployé grâce à Vercel.
