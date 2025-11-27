@@ -15,6 +15,7 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { unlockSounds } from "@/composables/use-sound";
 import { useStagger } from "@/composables/use-stagger";
 
 // Router instance used for navigation
@@ -22,6 +23,7 @@ const router = useRouter();
 
 // Navigate to the routine page when the button is clicked
 function startRoutine() {
+  unlockSounds();
   router.push("/routine");
 }
 

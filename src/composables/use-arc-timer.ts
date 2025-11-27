@@ -1,16 +1,11 @@
 import { gsap } from 'gsap'
+import { beepDown, beepUp } from './use-sound'
 
 // Base geometry
 const SIZE = 250
 const STROKE = 10
 const RADIUS = (SIZE - STROKE) / 2
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
-
-// Preloaded audio assets
-const beepDown = new Audio('/sounds/beep-down.mp3')
-const beepUp = new Audio('/sounds/beep-up.mp3')
-beepDown.preload = 'auto'
-beepUp.preload = 'auto'
 
 export interface ArcTimerControls {
   pause: () => void
@@ -40,7 +35,7 @@ export function useArcTimer(
 
   // Play initial cue sound
   try {
-    beepUp.currentTime = 0
+    beepUp.stop()
     beepUp.play()
   } catch { }
 
@@ -63,7 +58,7 @@ export function useArcTimer(
       // Last 3-second warning beep
       if (remaining < lastRemaining && remaining <= 3 && remaining > 0) {
         try {
-          beepDown.currentTime = 0
+          beepDown.stop()
           beepDown.play()
         } catch { }
       }

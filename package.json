@@ -19,8 +19,10 @@
     "biome:lint:fix": "pnpm exec biome lint --write --no-errors-on-unmatched"
   },
   "dependencies": {
+    "@types/howler": "^2.2.12",
     "canvas-confetti": "^1.9.4",
     "gsap": "^3.13.0",
+    "howler": "^2.2.4",
     "pinia": "^3.0.3",
     "vue": "^3.5.22",
     "vue-router": "^4.6.3"
