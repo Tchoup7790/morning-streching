@@ -35,8 +35,10 @@ export function useArcTimer(
 
   // Play initial cue sound
   try {
-    beepUp.stop()
-    beepUp.play()
+    gsap.delayedCall(0.55, () => {
+      beepUp.stop()
+      beepUp.play()
+    })
   } catch { }
 
   // Reset arc position
@@ -47,6 +49,7 @@ export function useArcTimer(
   tween = gsap.to(anim, {
     progress: 1,
     duration,
+    delay: 0.55,
     ease: 'none',
 
     onUpdate: () => {
