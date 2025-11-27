@@ -35,7 +35,7 @@ Actuellement, ce projet est déployé grâce à Vercel.
 2.	Une action CI/CD Vercel est déclenchée automatiquement.
 3.	Le build est généré et déployé sur l’infrastructure serverless de Vercel.
 
-**Les environnements disponibles : **
+**Les environnements disponibles :**
 - **Production**: [Lien](https://morning-streching.vercel.app/) vers la version live
 
 
