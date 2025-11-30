@@ -169,9 +169,8 @@ onUnmounted(() => controls?.kill());
 .exercise-image {
   position: relative;
   object-fit: cover;
-  width: 140px;
-  height: 140px;
-  border-radius: 50%;
+  width: 200px;
+  height: 190px;
 }
 
 .exercise-instructions {

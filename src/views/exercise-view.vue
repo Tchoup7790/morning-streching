@@ -26,7 +26,7 @@
       :waiting-time="store.waitingTime"
       :instructions="store.currentExercise.instructions"
       :has-next="store.hasNext"
-      image="/exercises/test.jpg"
+      :image="'/exercises' + store.currentExercise.image"
       @finished="onExerciseFinished"
     />
   </main>

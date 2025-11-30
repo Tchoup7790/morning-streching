@@ -8,7 +8,7 @@
       "Gardez les mains écartées à la largeur des épaules et tendez-les vers le plafond.",
       "Détendez vos épaules et regardez légèrement vers le haut."
     ],
-    "image": "public/1",
+    "image": "/main-vers-le-ciel.png",
     "duration": 30
   },
   {
@@ -19,7 +19,7 @@
       "En gardant le dos droit, faites une charnière au niveau des hanches pour vous penchez vers l'avant, en abaissant le haut du corps vers les jambes.",
       "Détendez votre tête, votre cou et vos bras et essayez de poser vos paumes sur le sol."
     ],
-    "image": "public/2",
+    "image": "/flexion-avant.png",
     "duration": 30
   },
   {
@@ -30,7 +30,7 @@
       "Avancez une jambe en plaçant votre pied à plat sur le sol devant vous.",
       "Poussez vos hanches vers l'avant et levez les bras au-dessus de la tête."
     ],
-    "image": "public/3",
+    "image": "/fente-avant.png",
     "duration": 30
   },
   {
@@ -41,7 +41,7 @@
       "Avancez une jambe en plaçant votre pied à plat sur le sol devant vous.",
       "Poussez vos hanches vers l'avant et levez les bras au-dessus de la tête."
     ],
-    "image": "public/3",
+    "image": "/fente-avant.png",
     "duration": 30
   },
   {
@@ -52,7 +52,7 @@
       "Appuyez vos paumes sur le sol, en redressant les bras pour soulever le haut du corps et les jambes du sol.",
       "Soulevez votre poitrine, détendez vos épaules et regardez légèrement vers le haut."
     ],
-    "image": "public/5",
+    "image": "/chien-face-au-ciel.png",
     "duration": 30
   },
   {
@@ -64,7 +64,7 @@
       "Reposez-vous sur vos talons, puis tendez les mains vers l'avant et abaissez votre poitrine vers le sol.",
       "Détendez vos hanches et posez votre front sur le sol."
     ],
-    "image": "public/6",
+    "image": "/posture-de-l-enfant.png",
     "duration": 30
   },
   {
@@ -75,7 +75,7 @@
       "Rentrez vos orteils, appuyez vos paumes sur le sol et redressez vos bras et vos jambes pour soulevez vos hanches et les ramener vers l'arrière.",
       "Poussez votre poitrine vers vos cuisses et vos talons vers le sol."
     ],
-    "image": "public/7",
+    "image": "/chien-tete-en-bas.png",
     "duration": 15
   },
   {
@@ -86,7 +86,7 @@
       "En gardant le dos droit, faites une charnière au niveau des hanches pour vous penchez vers l'avant, en abaissant le haut du corps vers les jambes.",
       "Détendez votre tête, votre cou et vos bras et essayez de poser vos paumes sur le sol."
     ],
-    "image": "public/8",
+    "image": "/posture-grand-angle.png",
     "duration": 15
   },
   {
@@ -98,7 +98,7 @@
       "Gardez les mains écartées à la largeur des épaules et tendez-les vers le plafond.",
       "Détendez vos épaules et regardez légèrement vers le haut."
     ],
-    "image": "public/1",
+    "image": "/main-vers-le-ciel.png",
     "duration": 30
   }
 ]
